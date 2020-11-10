@@ -1,0 +1,16 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        minSdkVersion 21
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+}
+
+dependencies {
+    api 'androidx.paging:paging-runtime-ktx:3.0.0-alpha08'
+}
