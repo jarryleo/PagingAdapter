@@ -580,7 +580,7 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
          * 绑定数据
          *
          * @param helper 帮助类
-         * @param item   数据
+         * @param data   数据
          */
         abstract fun bindData(helper: ItemHelper, data: T?, payloads: MutableList<Any>? = null)
 
@@ -588,7 +588,7 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
          * 初始化view，只在view第一次创建调用
          *
          * @param helper 帮助类
-         * @param item   数据
+         * @param data   数据
          */
         open fun initView(helper: ItemHelper, data: T?) {}
 
