@@ -7,10 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.leo.paging_adapter.adapter.NewsHolder
+import cn.leo.paging_adapter.adapter.TitleHolder
 import cn.leo.paging_adapter.bean.NewsBean
 import cn.leo.paging_adapter.model.NewsViewModel
 import cn.leo.paging_adapter.net.view_model.ViewModelCreator
 import cn.leo.paging_adapter.view.StatusPager
+import cn.leo.paging_ktx.FloatDecoration
 import cn.leo.paging_ktx.SimplePagingAdapter
 import cn.leo.paging_ktx.State
 import com.scwang.smartrefresh.layout.constant.RefreshState
@@ -21,7 +23,9 @@ class MainActivity : AppCompatActivity() {
 
     private val model by ViewModelCreator(NewsViewModel::class.java)
 
-    private val adapter by lazy { SimplePagingAdapter(NewsHolder()) }
+    private val adapter by lazy {
+        SimplePagingAdapter(NewsHolder(), TitleHolder())
+    }
 
     private val statePager by lazy {
         StatusPager.builder(srl_refresh)
@@ -44,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initRv() {
         rv_news.layoutManager = LinearLayoutManager(this)
+        rv_news.addItemDecoration(FloatDecoration(R.layout.item_title))
         rv_news.adapter = adapter
         //点击事件
         adapter.setOnItemClickListener { a, _, position ->

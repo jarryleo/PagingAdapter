@@ -2,7 +2,8 @@ package cn.leo.paging_adapter.model
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingSource
-import cn.leo.paging_adapter.bean.NewsBean
+import cn.leo.paging_adapter.bean.TitleBean
+import cn.leo.paging_ktx.DifferData
 import cn.leo.paging_ktx.SimplePager
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,14 +23,16 @@ class NewsViewModel : BaseViewModel() {
         .toLong()
 
     private val pager =
-        object : SimplePager<Long, NewsBean.StoriesBean>(20, initialKey) {
+        object : SimplePager<Long, DifferData>(20, initialKey) {
             override suspend fun loadData(params: PagingSource.LoadParams<Long>):
-                    PagingSource.LoadResult<Long, NewsBean.StoriesBean> {
+                    PagingSource.LoadResult<Long, DifferData> {
                 val date =
                     params.key ?: return PagingSource.LoadResult.Page(emptyList(), null, null)
                 return try {
                     val data = api.getNews(date).await()
-                    PagingSource.LoadResult.Page(data.stories, null, data.date?.toLongOrNull())
+                    val list: MutableList<DifferData> = data.stories.toMutableList()
+                    list.add(0, TitleBean(date.toString()))
+                    PagingSource.LoadResult.Page(list, null, data.date?.toLongOrNull())
                 } catch (e: Exception) {
                     PagingSource.LoadResult.Error(e)
                 }

@@ -256,7 +256,7 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
             mHolderCache[viewType] = holder
         }
         adapter.bindViewHolder(holder, mFloatPosition)
-        layoutView(holder!!.itemView, recyclerView)
+        layoutView(holder.itemView, recyclerView)
         return holder
     }
 

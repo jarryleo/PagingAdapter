@@ -66,4 +66,5 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.2'
     //paging
     implementation project(path: ':paging_ktx')
+    //implementation 'com.github.jarryleo:PagingAdapter:1.0.0'
 }

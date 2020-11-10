@@ -229,9 +229,18 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
             itemView.setOnLongClickListener(this)
         }
 
-        val mPosition get() = bindingAdapterPosition
+        val mPosition: Int
+            get() = if (bindingAdapterPosition == -1) {
+                bindPosition
+            } else {
+                bindingAdapterPosition
+            }
+
+        //传进来的position高，在手动创建holder时候bindingAdapterPosition为-1，需要使用传进来的值
+        var bindPosition: Int = 0
 
         fun onBindViewHolder(position: Int, payloads: MutableList<Any>? = null) {
+            bindPosition = position
             bindData(itemHelper, getItem(position), payloads)
         }
 
@@ -262,7 +271,7 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
         @LayoutRes
         @get:LayoutRes
         var itemLayoutResId: Int = 0
-        val position get() = viewHolder.bindingAdapterPosition
+        val position get() = viewHolder.mPosition
         val itemView: View = viewHolder.itemView
         val context: Context = itemView.context
         var tag: Any? = null
@@ -554,9 +563,9 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
         fun setItemHolder(itemHolder: ItemHolder<*>) {
             if (mItemHolder == null) {
                 mItemHolder = itemHolder as? ItemHolder<Any>
-                mItemHolder?.initView(this, adapter.getItem(position))
+                mItemHolder?.initView(this, adapter.getData(position))
             }
-            mItemHolder?.bindData(this, adapter.getItem(position))
+            mItemHolder?.bindData(this, adapter.getData(position))
         }
     }
 
