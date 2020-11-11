@@ -40,7 +40,7 @@ class SimplePagingAdapter(
     fun setPager(pager: SimplePager<*, DifferData>) {
         pager.getScope().launch {
             pager.getData().collectLatest {
-                super.submitData(it)
+                setData(this, it)
             }
         }
     }
