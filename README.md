@@ -47,7 +47,7 @@ interface DifferData {
 ```
 #### 2. 实现条目holder：继承SimpleHolder
 ```
-class NewsHolder : 继承SimpleHolder<NewsBean.StoriesBean>() {
+class NewsHolder : SimpleHolder<NewsBean.StoriesBean>() {
 
     override fun getLayoutRes(): Int {
         return R.layout.item_news
@@ -97,6 +97,6 @@ adapter.setPager(model.pager)
 ```
 
 
-**使用就是这么方便，其中一些定义需要对paging3有一定了解**
+**使用就是这么方便，其中一些定义需要对paging3有一定了解，更多功能请看范例**
 
 
