@@ -1,7 +1,9 @@
 package cn.leo.paging_ktx
 
-import androidx.lifecycle.Lifecycle
 import androidx.paging.PagingData
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 /**
  * @author : ling luo
@@ -31,15 +33,22 @@ class SimplePagingAdapter(
         this.holderList += holders
     }
 
-    fun <T : DifferData> setData(lifecycle: Lifecycle, pagingData: PagingData<T>) {
-        super.setPagingData(lifecycle, pagingData as PagingData<DifferData>)
+    fun <T : DifferData> setData(scope: CoroutineScope, pagingData: PagingData<T>) {
+        super.setPagingData(scope, pagingData as PagingData<DifferData>)
+    }
+
+    fun setPager(pager: SimplePager<*, DifferData>) {
+        pager.getScope().launch {
+            pager.getData().collectLatest {
+                super.submitData(it)
+            }
+        }
     }
 
     private fun getHolder(data: DifferData?): SimpleHolder<DifferData>? {
         val differData = data ?: return null
         return holderList.firstOrNull {
-            differData::class.java.name ==
-                    it::class.java.getSuperClassGenericType<SimpleHolder<*>>().name
+            differData::class.java == it::class.java.getSuperClassGenericType<SimpleHolder<*>>()
         } as? SimpleHolder<DifferData>
     }
 

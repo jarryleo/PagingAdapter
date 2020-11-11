@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.leo.paging_adapter.adapter.NewsHolder
 import cn.leo.paging_adapter.adapter.TitleHolder
@@ -17,7 +16,6 @@ import cn.leo.paging_ktx.SimplePagingAdapter
 import cn.leo.paging_ktx.State
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : AppCompatActivity() {
 
@@ -66,12 +64,8 @@ class MainActivity : AppCompatActivity() {
             adapter.retry()
         }
         //绑定数据源
-        lifecycleScope.launchWhenCreated {
-            model.data.collectLatest {
-                adapter.setData(this@MainActivity.lifecycle, it)
-            }
-        }
-        //请求状态
+        adapter.setPager(model.pager)
+        //下拉刷新状态
         adapter.setOnRefreshStateListener {
             when (it) {
                 is State.Loading -> {
@@ -101,7 +95,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 is State.Success -> {
                     if (it.noMoreData) {
-                        //没有更多了(只能用source的append)
                         srl_refresh.finishLoadMoreWithNoMoreData()
                     } else {
                         srl_refresh.finishLoadMore(true)

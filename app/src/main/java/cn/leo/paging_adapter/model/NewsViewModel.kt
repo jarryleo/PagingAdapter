@@ -22,22 +22,20 @@ class NewsViewModel : BaseViewModel() {
         .format(mDate.time)
         .toLong()
 
-    private val pager =
-        object : SimplePager<Long, DifferData>(20, initialKey) {
-            override suspend fun loadData(params: PagingSource.LoadParams<Long>):
-                    PagingSource.LoadResult<Long, DifferData> {
-                val date =
-                    params.key ?: return PagingSource.LoadResult.Page(emptyList(), null, null)
-                return try {
-                    val data = api.getNews(date).await()
-                    val list: MutableList<DifferData> = data.stories.toMutableList()
-                    list.add(0, TitleBean(date.toString()))
-                    PagingSource.LoadResult.Page(list, null, data.date?.toLongOrNull())
-                } catch (e: Exception) {
-                    PagingSource.LoadResult.Error(e)
-                }
-            }
+    val pager = SimplePager<Long, DifferData>(viewModelScope) {
+        val date = it.key ?: initialKey
+        try {
+            //从网络获取数据
+            val data = api.getNews(date).await()
+            //添加title
+            val list: MutableList<DifferData> = data.stories.toMutableList()
+            list.add(0, TitleBean(date.toString()))
+            //返回数据
+            PagingSource.LoadResult.Page(list, null, data.date?.toLongOrNull())
+        } catch (e: Exception) {
+            //请求失败
+            PagingSource.LoadResult.Error(e)
         }
+    }
 
-    val data = pager.getData(viewModelScope)
 }

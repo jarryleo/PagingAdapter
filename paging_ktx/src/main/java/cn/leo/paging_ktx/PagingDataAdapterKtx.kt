@@ -10,13 +10,14 @@ import android.widget.TextView
 import androidx.annotation.*
 import androidx.annotation.IntRange
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.Lifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.PagingDataAdapter
 import androidx.paging.filter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * @author : leo
@@ -100,39 +101,48 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
     protected lateinit var mPagingData: PagingData<T>
 
     /**
-     * 生命周期
+     * xz
      */
-    protected lateinit var mLifecycle: Lifecycle
+    protected lateinit var mScope: CoroutineScope
 
     /**
      * 采用setPagingData 可以动态增减数据
      */
-    open fun setPagingData(lifecycle: Lifecycle, pagingData: PagingData<T>) {
-        mLifecycle = lifecycle
+    open fun setPagingData(scope: CoroutineScope, pagingData: PagingData<T>) {
+        mScope = scope
         mPagingData = pagingData
-        submitData(lifecycle, pagingData)
+        submitPagingData()
+    }
+
+    /**
+     * 提交数据
+     */
+    private fun submitPagingData() {
+        mScope.launch {
+            submitData(mPagingData)
+        }
     }
 
     /**
      * 向尾部添加数据
      */
     fun appendItem(item: T) {
-        if (!this::mPagingData.isInitialized || !this::mLifecycle.isInitialized) {
+        if (!this::mPagingData.isInitialized || !this::mScope.isInitialized) {
             throw IllegalArgumentException("To add data, you must use the 'setPagingData' method")
         }
         mPagingData = mPagingData.insertFooterItem(item)
-        submitData(mLifecycle, mPagingData)
+        submitPagingData()
     }
 
     /**
      * 向首部添加数据
      */
     fun prependItem(item: T) {
-        if (!this::mPagingData.isInitialized || !this::mLifecycle.isInitialized) {
+        if (!this::mPagingData.isInitialized || !this::mScope.isInitialized) {
             throw IllegalArgumentException("To add data, you must use the 'setPagingData' method")
         }
         mPagingData = mPagingData.insertHeaderItem(item)
-        submitData(mLifecycle, mPagingData)
+        submitPagingData()
     }
 
     /**
@@ -140,11 +150,11 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
      * @param predicate 条件为false的移除，为true的保留
      */
     fun filterItem(predicate: suspend (T) -> Boolean) {
-        if (!this::mPagingData.isInitialized || !this::mLifecycle.isInitialized) {
+        if (!this::mPagingData.isInitialized || !this::mScope.isInitialized) {
             throw IllegalArgumentException("To edit data, you must use the 'setPagingData' method")
         }
         mPagingData = mPagingData.filter(predicate)
-        submitData(mLifecycle, mPagingData)
+        submitPagingData()
     }
 
     /**

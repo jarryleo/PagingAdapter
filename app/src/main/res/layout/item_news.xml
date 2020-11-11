@@ -13,7 +13,7 @@
         android:layout_marginRight="16dp"
         android:ellipsize="end"
         android:gravity="left"
-        android:maxLines="3"
+        android:maxLines="2"
         android:textColor="@color/black"
         android:textSize="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
