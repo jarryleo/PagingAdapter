@@ -100,4 +100,4 @@ adapter.setPager(model.pager)
 
 **使用就是这么方便，其中一些定义需要对paging3有一定了解，更多功能请看范例**
 
-
+[Paging3用法详解和踩坑经验](https://juejin.im/post/6885983953463803911)
