@@ -1,12 +1,12 @@
 package cn.leo.paging_adapter.adapter
 
-import android.widget.ImageView
 import cn.leo.paging_adapter.R
 import cn.leo.paging_adapter.bean.NewsBean
 import cn.leo.paging_adapter.image.loadImage
 import cn.leo.paging_adapter.utils.dp
 import cn.leo.paging_ktx.PagingDataAdapterKtx
 import cn.leo.paging_ktx.SimpleHolder
+import kotlinx.android.synthetic.main.item_news.view.*
 
 /**
  * @author : leo
@@ -24,9 +24,15 @@ class NewsHolder : SimpleHolder<NewsBean.StoriesBean>() {
         data: NewsBean.StoriesBean,
         payloads: MutableList<Any>?
     ) {
-        helper.setText(R.id.tv_title, data.title)
+        //设置数据方法，可以采用官方kotlin的方案
+        helper.itemView.apply {
+            tv_title.text = data.title
+            iv_cover.loadImage(data.images?.get(0) ?: "", corners = 6.dp)
+        }
+        //也可以采用helper的id方案，helper里可以获取position和设置点击事件等
+        /*helper.setText(R.id.tv_title, data.title)
             .findViewById<ImageView>(R.id.iv_cover)
-            .loadImage(data.images?.get(0) ?: "", corners = 6.dp)
+            .loadImage(data.images?.get(0) ?: "", corners = 6.dp)*/
     }
 
 
