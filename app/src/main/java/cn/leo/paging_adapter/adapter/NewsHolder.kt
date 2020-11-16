@@ -9,7 +9,7 @@ import cn.leo.paging_ktx.PagingDataAdapterKtx
 import cn.leo.paging_ktx.SimpleHolder
 
 /**
- * @author : ling luo
+ * @author : leo
  * @date : 2020/11/10
  * @description : 知乎日报 holder
  */

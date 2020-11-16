@@ -3,7 +3,7 @@ package cn.leo.paging_ktx
 import androidx.annotation.LayoutRes
 
 /**
- * @author : ling luo
+ * @author : leo
  * @date : 2020/11/10
  * @description : paging 占位holder
  * 当数据为空的时候 显示的占位holder，用来确认固定数量条目
