@@ -24,7 +24,7 @@ class NewsHolder : SimpleHolder<NewsBean.StoriesBean>() {
         data: NewsBean.StoriesBean,
         payloads: MutableList<Any>?
     ) {
-        //设置数据方法，可以采用官方kotlin的方案
+        //设置数据方法，可以采用官方kotlin的方案（没有缓存，每次都采用findViewById,helper有缓存）
         helper.itemView.apply {
             tv_title.text = data.title
             iv_cover.loadImage(data.images?.get(0) ?: "", corners = 6.dp)
