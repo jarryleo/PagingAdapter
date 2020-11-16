@@ -30,7 +30,7 @@ allprojects {
 2. 依赖：在模块build.gradle添加
 ```
 dependencies {
-	    implementation 'com.github.jarryleo:PagingAdapter:1.0.2'
+	    implementation 'com.github.jarryleo:PagingAdapter:1.0.3'
 }
 ```
 
@@ -53,12 +53,11 @@ class NewsHolder : SimpleHolder<NewsBean.StoriesBean>() {
         return R.layout.item_news
     }
 
-    override fun bindData(
+    override fun bindItem(
         helper: PagingDataAdapterKtx.ItemHelper,
-        data: NewsBean.StoriesBean?,
+        data: NewsBean.StoriesBean,
         payloads: MutableList<Any>?
     ) {
-        if (data == null) return
         helper.setText(R.id.tv_title, data.title)
             .findViewById<ImageView>(R.id.iv_cover)
             .loadImage(data.images?.get(0) ?: "", corners = 6.dp)
@@ -67,7 +66,7 @@ class NewsHolder : SimpleHolder<NewsBean.StoriesBean>() {
 ```
 #### 3. 设置Adapter
 ```
- recyclerView.adapter = SimplePagingAdapter(NewsHolder())
+ recyclerView.adapter = SimplePagingAdapter(NewsHolder(), TitleHolder())
 
 ```
 
@@ -95,6 +94,8 @@ val pager = SimplePager<Long, DifferData>(viewModelScope) {
 //绑定数据源
 adapter.setPager(model.pager)
 ```
+
+`注意：不要使用adapter默认的 submitData,否则无法修改数据`
 
 
 **使用就是这么方便，其中一些定义需要对paging3有一定了解，更多功能请看范例**
