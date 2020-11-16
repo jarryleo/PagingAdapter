@@ -3,7 +3,7 @@ package cn.leo.paging_adapter.bean
 import cn.leo.paging_ktx.DifferData
 
 /**
- * @author : ling luo
+ * @author : leo
  * @date : 2020/11/10
  * @description : 标题分组
  */

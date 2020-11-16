@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 /**
- * @author : ling luo
+ * @author : leo
  * @date : 2020/11/10
  * @description : 简易RvAdapter
  */
@@ -26,11 +26,16 @@ class SimplePagingAdapter(
         }
     )
 ) {
-    private val holderList =
-        mutableListOf<SimpleHolder<*>>()
+
+    private val holderMap =
+        mutableMapOf<Class<DifferData>, SimpleHolder<DifferData>?>()
 
     init {
-        this.holderList += holders
+        holders.forEach {
+            val key = it::class.java.getSuperClassGenericType<DifferData>()
+            val value = it as? SimpleHolder<DifferData>
+            holderMap[key] = value
+        }
     }
 
     fun <T : DifferData> setData(scope: CoroutineScope, pagingData: PagingData<T>) {
@@ -46,10 +51,12 @@ class SimplePagingAdapter(
     }
 
     private fun getHolder(data: DifferData?): SimpleHolder<DifferData>? {
-        val differData = data ?: return null
-        return holderList.firstOrNull {
-            differData::class.java == it::class.java.getSuperClassGenericType<SimpleHolder<*>>()
-        } as? SimpleHolder<DifferData>
+        val key = if (data == null) {
+            DifferData::class.java
+        } else {
+            data::class.java
+        }
+        return holderMap[key]
     }
 
     override fun getItemLayout(position: Int): Int {

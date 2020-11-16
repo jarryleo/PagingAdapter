@@ -4,7 +4,7 @@ import java.util.*
 
 
 /**
- * @author lingluo
+ * @author leo
  */
 object UrlUtil {
     /**

@@ -7,7 +7,7 @@ import androidx.lifecycle.Observer
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * @author : ling luo
+ * @author : leo
  * @date : 2020/11/4
  * @description : LiveData包装类,阻止数据倒灌,新加入观察者之后，通知被锁住，只有新的事件才能解锁；
  * 保证只有在事件发送之前注册的观察者才能收到通知；
