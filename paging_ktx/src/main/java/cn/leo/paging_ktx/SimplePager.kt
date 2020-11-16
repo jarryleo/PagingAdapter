@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.Flow
 class SimplePager<K : Any, V : Any>(
     private val scope: CoroutineScope,
     private val pageSize: Int = 20,
+    private val prefetchDistance: Int = pageSize,
+    private val enablePlaceholders: Boolean = false,
     private val initialKey: K? = null,
     private val loadData: suspend (PagingSource.LoadParams<K>) -> PagingSource.LoadResult<K, V>
 ) {
@@ -21,7 +23,8 @@ class SimplePager<K : Any, V : Any>(
             PagingConfig(
                 pageSize,
                 initialLoadSize = pageSize,
-                enablePlaceholders = false //SimplePager不支持占位条目
+                prefetchDistance = prefetchDistance,
+                enablePlaceholders = enablePlaceholders
             ),
             initialKey = initialKey
         ) {

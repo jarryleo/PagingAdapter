@@ -246,7 +246,7 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
                 bindingAdapterPosition
             }
 
-        //传进来的position高，在手动创建holder时候bindingAdapterPosition为-1，需要使用传进来的值
+        //传进来的position值，在手动创建holder时候bindingAdapterPosition为-1，需要使用传进来的值
         var bindPosition: Int = 0
 
         fun onBindViewHolder(position: Int, payloads: MutableList<Any>? = null) {

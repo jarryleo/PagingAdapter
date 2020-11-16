@@ -46,9 +46,14 @@ class SimplePagingAdapter(
     }
 
     private fun getHolder(data: DifferData?): SimpleHolder<DifferData>? {
-        val differData = data ?: return null
+        if (data == null) {
+            val firstOrNull = holderList.firstOrNull {
+                it is PagingPlaceHolder
+            }
+            return firstOrNull as? SimpleHolder<DifferData>
+        }
         return holderList.firstOrNull {
-            differData::class.java == it::class.java.getSuperClassGenericType<SimpleHolder<*>>()
+            data::class.java == it::class.java.getSuperClassGenericType<SimpleHolder<*>>()
         } as? SimpleHolder<DifferData>
     }
 

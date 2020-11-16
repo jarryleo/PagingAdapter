@@ -19,12 +19,11 @@ class NewsHolder : SimpleHolder<NewsBean.StoriesBean>() {
         return R.layout.item_news
     }
 
-    override fun bindData(
+    override fun bindItem(
         helper: PagingDataAdapterKtx.ItemHelper,
-        data: NewsBean.StoriesBean?,
+        data: NewsBean.StoriesBean,
         payloads: MutableList<Any>?
     ) {
-        if (data == null) return
         helper.setText(R.id.tv_title, data.title)
             .findViewById<ImageView>(R.id.iv_cover)
             .loadImage(data.images?.get(0) ?: "", corners = 6.dp)

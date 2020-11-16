@@ -16,12 +16,11 @@ class TitleHolder : SimpleHolder<TitleBean>() {
         return R.layout.item_title
     }
 
-    override fun bindData(
+    override fun bindItem(
         helper: PagingDataAdapterKtx.ItemHelper,
-        data: TitleBean?,
+        data: TitleBean,
         payloads: MutableList<Any>?
     ) {
-        if (data == null) return
         helper.setText(R.id.tv_title, data.title)
     }
 
