@@ -7,10 +7,11 @@ import androidx.annotation.LayoutRes
  * @date : 2020/11/10
  * @description : 简易holder
  */
-abstract class SimpleHolder<T : DifferData> : PagingDataAdapterKtx.ItemHolder<T>() {
+abstract class SimpleHolder<T : DifferData>(@LayoutRes val res: Int) :
+    PagingDataAdapterKtx.ItemHolder<T>() {
 
     @LayoutRes
-    abstract fun getLayoutRes(): Int
+    fun getLayoutRes(): Int = res
 
     final override fun bindData(
         helper: PagingDataAdapterKtx.ItemHelper,

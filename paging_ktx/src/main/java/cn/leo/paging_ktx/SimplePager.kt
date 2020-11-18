@@ -17,7 +17,9 @@ class SimplePager<K : Any, V : Any>(
     private val maxSize: Int = PagingConfig.MAX_SIZE_UNBOUNDED,
     private val enablePlaceholders: Boolean = false,
     private val initialKey: K? = null,
-    private val loadData: suspend (PagingSource.LoadParams<K>) -> PagingSource.LoadResult<K, V>
+    private val pagingSource: PagingSource<K, V>? = null,
+    private val loadData:
+    suspend (PagingSource.LoadParams<K>) -> PagingSource.LoadResult<K, V>? = { null }
 ) {
 
     fun getData(): Flow<PagingData<V>> {
@@ -31,9 +33,11 @@ class SimplePager<K : Any, V : Any>(
             ),
             initialKey = initialKey
         ) {
-            object : PagingSource<K, V>() {
+            pagingSource ?: object : PagingSource<K, V>() {
                 override suspend fun load(params: LoadParams<K>): LoadResult<K, V> {
-                    return loadData(params)
+                    return loadData(params) ?: throw IllegalArgumentException(
+                        "one of pagingSource or loadData must not null"
+                    )
                 }
             }
         }.flow.cachedIn(scope)

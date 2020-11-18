@@ -30,7 +30,7 @@ allprojects {
 2. 依赖：在模块build.gradle添加
 ```
 dependencies {
-	    implementation 'com.github.jarryleo:PagingAdapter:1.0.3'
+	    implementation 'com.github.jarryleo:PagingAdapter:1.0.5'
 }
 ```
 
@@ -47,12 +47,7 @@ interface DifferData {
 ```
 #### 2. 实现条目holder：继承SimpleHolder
 ```
-class NewsHolder : SimpleHolder<NewsBean.StoriesBean>() {
-
-    override fun getLayoutRes(): Int {
-        return R.layout.item_news
-    }
-
+class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
     override fun bindItem(
         helper: PagingDataAdapterKtx.ItemHelper,
         data: NewsBean.StoriesBean,

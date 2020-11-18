@@ -10,12 +10,7 @@ import cn.leo.paging_ktx.SimpleHolder
  * @date : 2020/11/10
  * @description : 标题holder
  */
-class TitleHolder : SimpleHolder<TitleBean>() {
-
-    override fun getLayoutRes(): Int {
-        return R.layout.item_title
-    }
-
+class TitleHolder : SimpleHolder<TitleBean>(R.layout.item_title) {
     override fun bindItem(
         helper: PagingDataAdapterKtx.ItemHelper,
         data: TitleBean,
@@ -23,5 +18,4 @@ class TitleHolder : SimpleHolder<TitleBean>() {
     ) {
         helper.setText(R.id.tv_title, data.title)
     }
-
 }
