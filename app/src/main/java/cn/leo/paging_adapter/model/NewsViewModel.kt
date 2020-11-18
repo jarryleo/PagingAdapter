@@ -22,30 +22,29 @@ class NewsViewModel : BaseViewModel() {
         .format(mDate.time)
         .toLong()
 
-    val pager =
-        SimplePager<Long, DifferData>(
-            viewModelScope,
-            enablePlaceholders = true
-        ) {
-            val date = it.key ?: initialKey
-            try {
-                //从网络获取数据
-                val data = api.getNews(date).await()
-                //添加title
-                val list: MutableList<DifferData> = data.stories.toMutableList()
-                list.add(0, TitleBean(date.toString()))
-                //返回数据
-                PagingSource.LoadResult.Page(
-                    list,
-                    null,
-                    data.date?.toLongOrNull(),
-                    0,  //前面剩余多少未加载数量，
-                    100  //后面剩余多少未加载数量，配合 enablePlaceholders 在滑动过快的时候显示占位；
-                )
-            } catch (e: Exception) {
-                //请求失败
-                PagingSource.LoadResult.Error(e)
-            }
+    val pager = SimplePager<Long, DifferData>(
+        viewModelScope,
+        enablePlaceholders = true
+    ) {
+        val date = it.key ?: initialKey
+        try {
+            //从网络获取数据
+            val data = api.getNews(date).await()
+            //添加title
+            val list: MutableList<DifferData> = data.stories.toMutableList()
+            list.add(0, TitleBean(date.toString()))
+            //返回数据
+            PagingSource.LoadResult.Page(
+                list,
+                null,
+                data.date?.toLongOrNull(),
+                0,  //前面剩余多少未加载数量，
+                100  //后面剩余多少未加载数量，配合 enablePlaceholders 在滑动过快的时候显示占位；
+            )
+        } catch (e: Exception) {
+            //请求失败
+            PagingSource.LoadResult.Error(e)
         }
+    }
 
 }
