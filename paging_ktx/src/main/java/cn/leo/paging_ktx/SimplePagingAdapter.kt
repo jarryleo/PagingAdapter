@@ -42,7 +42,7 @@ class SimplePagingAdapter(
         super.setPagingData(scope, pagingData as PagingData<DifferData>)
     }
 
-    fun setPager(pager: SimplePager<*, DifferData>) {
+    fun <T : DifferData> setPager(pager: SimplePager<*, T>) {
         pager.getScope().launch {
             pager.getData().collectLatest {
                 setData(this, it)
