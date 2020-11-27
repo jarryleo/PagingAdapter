@@ -23,7 +23,11 @@ class MainActivity : AppCompatActivity() {
     private val model by ViewModelCreator(NewsViewModel::class.java)
 
     private val adapter by lazy {
-        SimplePagingAdapter(NewsHolder(), TitleHolder(), PagingPlaceHolder(R.layout.item_holder))
+        SimplePagingAdapter(
+            NewsHolder(),
+            TitleHolder(),
+            PagingPlaceHolder(R.layout.item_holder)
+        )
     }
 
     private val statePager by lazy {
