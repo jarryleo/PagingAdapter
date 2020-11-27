@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
  * @description : 简易RvAdapter
  */
 @Suppress("UNUSED", "UNCHECKED_CAST", "MemberVisibilityCanBePrivate")
-class SimplePagingAdapter(
+open class SimplePagingAdapter(
     vararg holders: SimpleHolder<*>
 ) : PagingDataAdapterKtx<DifferData>(
     itemCallback(
@@ -31,11 +31,19 @@ class SimplePagingAdapter(
         mutableMapOf<Class<DifferData>, SimpleHolder<DifferData>?>()
 
     init {
+        cacheHolder(holders)
+    }
+
+    private fun cacheHolder(holders: Array<out SimpleHolder<*>>) {
         holders.forEach {
             val key = it::class.java.getSuperClassGenericType<DifferData>()
             val value = it as? SimpleHolder<DifferData>
             holderMap[key] = value
         }
+    }
+
+    protected fun setHolder(key: Class<DifferData>, holder: SimpleHolder<DifferData>) {
+        holderMap[key] = holder
     }
 
     fun <T : DifferData> setList(scope: CoroutineScope, list: List<T>) {

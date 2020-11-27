@@ -31,3 +31,16 @@ class TopSmoothScroller(context: Context) : LinearSmoothScroller(context) {
         return SNAP_TO_START
     }
 }
+
+/**
+ * 文字数组转StringData列表
+ */
+fun Array<out CharSequence>.toStringDataList() =
+    this.map { StringData(it) }
+
+/**
+ * 文字列表转StringData列表
+ */
+fun List<CharSequence>.toStringDataList() =
+    this.map { StringData(it) }
+
