@@ -452,6 +452,19 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
             return this
         }
 
+        /**
+         * 设置view的背景颜色
+         *
+         * @param viewId 控件id
+         * @param color  颜色值，不是资源值
+         */
+        fun setBackgroundColor(@IdRes viewId: Int, @ColorInt color: Int): ItemHelper {
+            getViewById<View>(viewId) {
+                it.setBackgroundColor(color)
+            }
+            return this
+        }
+
         fun setVisibility(@IdRes viewId: Int, visibility: Int): ItemHelper {
             getViewById<View>(viewId) {
                 it.visibility = visibility
