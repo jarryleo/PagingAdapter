@@ -59,15 +59,11 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
     /**
      * 给条目绑定数据
      *
-     * @param helper  条目帮助类
+     * @param item  条目帮助类
      * @param data    对应数据
      * @param payloads item局部变更
      */
-    protected abstract fun bindData(
-        helper: ItemHelper,
-        data: T?,
-        payloads: MutableList<Any>? = null
-    )
+    protected abstract fun bindData(item: ItemHelper, data: T?, payloads: MutableList<Any>? = null)
 
     //</editor-fold>
 
@@ -77,7 +73,7 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as? ViewHolder)?.onBindViewHolder(position)
+        (holder as? PagingAdapter<*>.ViewHolder)?.onBindViewHolder(position)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -193,24 +189,21 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
         if (payloads.isEmpty()) {
             onBindViewHolder(holder, position)
         } else {
-            val viewHolder = holder as? ViewHolder
+            val viewHolder = holder as? PagingAdapter<*>.ViewHolder
             val helper = viewHolder?.itemHelper
             val itemHolder = helper?.mItemHolder
             val item = getItem(position)
             if (itemHolder != null) {
                 itemHolder.bindData(helper, item, payloads)
             } else {
-                (holder as? ViewHolder)?.onBindViewHolder(
-                    position,
-                    payloads
-                )
+                (holder as? PagingAdapter<*>.ViewHolder)?.onBindViewHolder(position, payloads)
             }
         }
     }
 
 
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        val viewHolder = holder as? ViewHolder
+        val viewHolder = holder as? PagingAdapter<*>.ViewHolder
         val helper = viewHolder?.itemHelper
         val itemHolder = helper?.mItemHolder
         itemHolder?.onViewDetach(helper)

@@ -19,8 +19,6 @@ class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
         payloads: MutableList<Any>?
     ) {
         item.setText(R.id.tv_title, data.title)
-            .setImage(R.id.iv_cover) {
-                loadImage(data.images?.get(0) ?: "", corners = 6.dp)
-            }
+            .setImage(R.id.iv_cover) { loadImage(data.images?.get(0) ?: "", corners = 6.dp) }
     }
 }

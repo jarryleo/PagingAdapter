@@ -19,12 +19,12 @@ data class NewsBean(
         var url: String? = null,
         var images: List<String>? = null
     ) : DifferData {
-        override fun areItemsTheSame(d: DifferData): Boolean {
-            return (d as? StoriesBean)?.id == id
+        override fun areItemsTheSame(data: DifferData): Boolean {
+            return (data as? StoriesBean)?.id == id
         }
 
-        override fun areContentsTheSame(d: DifferData): Boolean {
-            return (d as? StoriesBean)?.title == title
+        override fun areContentsTheSame(data: DifferData): Boolean {
+            return (data as? StoriesBean)?.title == title
         }
     }
 }

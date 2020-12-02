@@ -3,19 +3,19 @@ package cn.leo.paging_ktx.adapter
 /**
  * @author : leo
  * @date : 2020/11/10
- * @description : 数据比较类
+ * @description : 数据比较接口
  */
 interface DifferData {
 
-    fun areItemsTheSame(d: DifferData): Boolean {
-        return this == d
+    fun areItemsTheSame(data: DifferData): Boolean {
+        return this == data
     }
 
-    fun areContentsTheSame(d: DifferData): Boolean {
-        return this == d
+    fun areContentsTheSame(data: DifferData): Boolean {
+        return this == data
     }
 
-    fun getChangePayload(d: DifferData): Any? {
+    fun getChangePayload(data: DifferData): Any? {
         return null
     }
 

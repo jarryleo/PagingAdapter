@@ -10,12 +10,12 @@ import cn.leo.paging_ktx.adapter.DifferData
 data class StringData(
     val string: CharSequence
 ) : DifferData {
-    override fun areItemsTheSame(d: DifferData): Boolean {
-        return (d as? StringData)?.string == string
+    override fun areItemsTheSame(data: DifferData): Boolean {
+        return (data as? StringData)?.string == string
     }
 
-    override fun areContentsTheSame(d: DifferData): Boolean {
-        return (d as? StringData)?.string == string
+    override fun areContentsTheSame(data: DifferData): Boolean {
+        return (data as? StringData)?.string == string
     }
 
     override fun toString(): String {

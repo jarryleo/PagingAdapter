@@ -38,7 +38,7 @@ dependencies {
 
 #### 1. 数据模型bean类实现接口 DifferData
 ```
-//用作数据比较，执行RecyclerView条目动画，方法可以不实现
+//用作数据比较，执行RecyclerView条目动画,可以不实现方法，但是不建议这样做，性能差距就在这里体现
 interface DifferData {
     fun areItemsTheSame(d: DifferData): Boolean
     fun areContentsTheSame(d: DifferData): Boolean
@@ -49,13 +49,12 @@ interface DifferData {
 ```
 class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
     override fun bindItem(
-        helper: ItemHelper,
+        item: ItemHelper,
         data: NewsBean.StoriesBean,
         payloads: MutableList<Any>?
     ) {
-        helper.setText(R.id.tv_title, data.title)
-            .findViewById<ImageView>(R.id.iv_cover)
-            .loadImage(data.images?.get(0) ?: "", corners = 6.dp)
+        item.setText(R.id.tv_title, data.title)
+            .setImage(R.id.iv_cover) { loadImage(data.images?.get(0) ?: "", corners = 6.dp) }
     }
 }
 ```
