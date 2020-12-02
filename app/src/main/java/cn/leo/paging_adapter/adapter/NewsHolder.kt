@@ -4,8 +4,8 @@ import cn.leo.paging_adapter.R
 import cn.leo.paging_adapter.bean.NewsBean
 import cn.leo.paging_adapter.image.loadImage
 import cn.leo.paging_adapter.utils.dp
-import cn.leo.paging_ktx.ItemHelper
-import cn.leo.paging_ktx.SimpleHolder
+import cn.leo.paging_ktx.adapter.ItemHelper
+import cn.leo.paging_ktx.simple.SimpleHolder
 
 /**
  * @author : leo
@@ -14,11 +14,11 @@ import cn.leo.paging_ktx.SimpleHolder
  */
 class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
     override fun bindItem(
-        helper: ItemHelper,
+        item: ItemHelper,
         data: NewsBean.StoriesBean,
         payloads: MutableList<Any>?
     ) {
-        helper.setText(R.id.tv_title, data.title)
+        item.setText(R.id.tv_title, data.title)
             .setImage(R.id.iv_cover) {
                 loadImage(data.images?.get(0) ?: "", corners = 6.dp)
             }

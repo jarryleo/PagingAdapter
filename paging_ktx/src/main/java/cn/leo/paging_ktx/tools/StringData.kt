@@ -1,4 +1,6 @@
-package cn.leo.paging_ktx
+package cn.leo.paging_ktx.tools
+
+import cn.leo.paging_ktx.adapter.DifferData
 
 /**
  * @author : leo

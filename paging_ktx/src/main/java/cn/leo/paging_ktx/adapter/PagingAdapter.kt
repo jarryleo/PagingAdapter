@@ -1,4 +1,4 @@
-package cn.leo.paging_ktx
+package cn.leo.paging_ktx.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
  * @date : 2020/5/11
  */
 @Suppress("UNUSED", "UNCHECKED_CAST", "MemberVisibilityCanBePrivate")
-abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHolder> {
+abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHolder> {
 
     constructor() : super(itemCallback())
 
@@ -77,7 +77,7 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as? PagingDataAdapterKtx<*>.ViewHolder)?.onBindViewHolder(position)
+        (holder as? ViewHolder)?.onBindViewHolder(position)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -193,14 +193,14 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
         if (payloads.isEmpty()) {
             onBindViewHolder(holder, position)
         } else {
-            val viewHolder = holder as? PagingDataAdapterKtx<*>.ViewHolder
+            val viewHolder = holder as? ViewHolder
             val helper = viewHolder?.itemHelper
             val itemHolder = helper?.mItemHolder
             val item = getItem(position)
             if (itemHolder != null) {
                 itemHolder.bindData(helper, item, payloads)
             } else {
-                (holder as? PagingDataAdapterKtx<*>.ViewHolder)?.onBindViewHolder(
+                (holder as? ViewHolder)?.onBindViewHolder(
                     position,
                     payloads
                 )
@@ -210,7 +210,7 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
 
 
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        val viewHolder = holder as? PagingDataAdapterKtx<*>.ViewHolder
+        val viewHolder = holder as? ViewHolder
         val helper = viewHolder?.itemHelper
         val itemHolder = helper?.mItemHolder
         itemHolder?.onViewDetach(helper)
@@ -229,7 +229,7 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
             itemHelper.setLayoutResId(layout)
             itemHelper.setOnItemChildClickListener(mOnItemChildClickListenerProxy)
             itemHelper.setOnItemChildLongClickListener(mOnItemChildLongClickListenerProxy)
-            itemHelper.setRVAdapter(this@PagingDataAdapterKtx)
+            itemHelper.setRVAdapter(this@PagingAdapter)
             itemView.setOnClickListener(this)
             itemView.setOnLongClickListener(this)
         }
@@ -251,13 +251,13 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
 
         override fun onClick(v: View) {
             if (::mOnItemClickListener.isInitialized) {
-                mOnItemClickListener(this@PagingDataAdapterKtx, v, mPosition)
+                mOnItemClickListener(this@PagingAdapter, v, mPosition)
             }
         }
 
         override fun onLongClick(v: View): Boolean {
             if (::mOnItemLongClickListener.isInitialized) {
-                mOnItemLongClickListener(this@PagingDataAdapterKtx, v, mPosition)
+                mOnItemLongClickListener(this@PagingAdapter, v, mPosition)
                 return true
             }
             return false
@@ -266,22 +266,22 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
 
     //<editor-fold desc="事件监听">
     private lateinit var mOnItemClickListener:
-                (adapter: PagingDataAdapterKtx<out Any>, v: View, position: Int) -> Unit
+                (adapter: PagingAdapter<out Any>, v: View, position: Int) -> Unit
     private lateinit var mOnItemLongClickListener:
-                (adapter: PagingDataAdapterKtx<out Any>, v: View, position: Int) -> Unit
+                (adapter: PagingAdapter<out Any>, v: View, position: Int) -> Unit
     private lateinit var mOnItemChildClickListener:
-                (adapter: PagingDataAdapterKtx<out Any>, v: View, position: Int) -> Unit
+                (adapter: PagingAdapter<out Any>, v: View, position: Int) -> Unit
     private lateinit var mOnItemChildLongClickListener:
-                (adapter: PagingDataAdapterKtx<out Any>, v: View, position: Int) -> Unit
+                (adapter: PagingAdapter<out Any>, v: View, position: Int) -> Unit
     val mOnItemChildClickListenerProxy:
-                (adapter: PagingDataAdapterKtx<out Any>, v: View, position: Int) -> Unit =
+                (adapter: PagingAdapter<out Any>, v: View, position: Int) -> Unit =
         { adapter, v, position ->
             if (::mOnItemChildClickListener.isInitialized) {
                 mOnItemChildClickListener(adapter, v, position)
             }
         }
     val mOnItemChildLongClickListenerProxy:
-                (adapter: PagingDataAdapterKtx<out Any>, v: View, position: Int) -> Unit =
+                (adapter: PagingAdapter<out Any>, v: View, position: Int) -> Unit =
         { adapter, v, position ->
             if (::mOnItemChildLongClickListener.isInitialized) {
                 mOnItemChildLongClickListener(adapter, v, position)
@@ -290,21 +290,21 @@ abstract class PagingDataAdapterKtx<T : Any> : PagingDataAdapter<T, RecyclerView
 
     fun setOnItemClickListener(
         onItemClickListener:
-            (adapter: PagingDataAdapterKtx<out Any>, v: View, position: Int) -> Unit
+            (adapter: PagingAdapter<out Any>, v: View, position: Int) -> Unit
     ) {
         mOnItemClickListener = onItemClickListener
     }
 
     fun setOnItemLongClickListener(
         onItemLongClickListener:
-            (adapter: PagingDataAdapterKtx<out Any>, v: View, position: Int) -> Unit
+            (adapter: PagingAdapter<out Any>, v: View, position: Int) -> Unit
     ) {
         mOnItemLongClickListener = onItemLongClickListener
     }
 
     fun setOnItemChildClickListener(
         onItemChildClickListener:
-            (adapter: PagingDataAdapterKtx<out Any>, v: View, position: Int) -> Unit
+            (adapter: PagingAdapter<out Any>, v: View, position: Int) -> Unit
     ) {
         mOnItemChildClickListener = onItemChildClickListener
     }

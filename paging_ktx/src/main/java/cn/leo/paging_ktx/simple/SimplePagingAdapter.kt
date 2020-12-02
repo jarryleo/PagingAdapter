@@ -1,6 +1,10 @@
-package cn.leo.paging_ktx
+package cn.leo.paging_ktx.simple
 
 import androidx.paging.PagingData
+import cn.leo.paging_ktx.adapter.DifferData
+import cn.leo.paging_ktx.adapter.ItemHelper
+import cn.leo.paging_ktx.adapter.PagingAdapter
+import cn.leo.paging_ktx.ext.getSuperClassGenericType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -13,7 +17,7 @@ import kotlinx.coroutines.launch
 @Suppress("UNUSED", "UNCHECKED_CAST", "MemberVisibilityCanBePrivate")
 open class SimplePagingAdapter(
     vararg holders: SimpleHolder<*>
-) : PagingDataAdapterKtx<DifferData>(
+) : PagingAdapter<DifferData>(
     itemCallback(
         areItemsTheSame = { old, new ->
             old.areItemsTheSame(new)

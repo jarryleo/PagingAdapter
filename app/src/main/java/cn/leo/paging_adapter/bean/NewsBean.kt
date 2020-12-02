@@ -1,6 +1,6 @@
 package cn.leo.paging_adapter.bean
 
-import cn.leo.paging_ktx.DifferData
+import cn.leo.paging_ktx.adapter.DifferData
 
 /**
  * @author : leo

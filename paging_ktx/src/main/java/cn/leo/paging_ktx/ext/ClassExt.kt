@@ -1,4 +1,4 @@
-package cn.leo.paging_ktx
+package cn.leo.paging_ktx.ext
 
 import java.lang.reflect.ParameterizedType
 

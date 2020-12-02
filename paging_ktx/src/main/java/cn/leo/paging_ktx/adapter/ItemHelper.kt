@@ -1,4 +1,4 @@
-package cn.leo.paging_ktx
+package cn.leo.paging_ktx.adapter
 
 import android.content.Context
 import android.util.SparseArray
@@ -14,14 +14,14 @@ import androidx.core.app.ActivityCompat
  * @description : 条目帮助类
  */
 @Suppress("UNUSED", "UNCHECKED_CAST", "MemberVisibilityCanBePrivate")
-class ItemHelper(private val viewHolder: PagingDataAdapterKtx<*>.ViewHolder) :
+class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
     View.OnClickListener, View.OnLongClickListener {
 
     private val viewCache = SparseArray<View>()
     private val clickListenerCache by lazy { ArrayList<Int>() }
     private val longClickListenerCache by lazy { ArrayList<Int>() }
     private val mTags by lazy { HashMap<String, Any>() }
-    lateinit var adapter: PagingDataAdapterKtx<out Any> private set
+    lateinit var adapter: PagingAdapter<out Any> private set
 
     @LayoutRes
     @get:LayoutRes
@@ -32,10 +32,10 @@ class ItemHelper(private val viewHolder: PagingDataAdapterKtx<*>.ViewHolder) :
     var tag: Any? = null
 
     private lateinit var mOnItemChildClickListener:
-                (adapter: PagingDataAdapterKtx<out Any>, v: View, position: Int) -> Unit
+                (adapter: PagingAdapter<out Any>, v: View, position: Int) -> Unit
 
     private lateinit var mOnItemChildLongClickListener:
-                (adapter: PagingDataAdapterKtx<out Any>, v: View, position: Int) -> Unit
+                (adapter: PagingAdapter<out Any>, v: View, position: Int) -> Unit
 
     fun setLayoutResId(@LayoutRes layoutResId: Int) {
         this.itemLayoutResId = layoutResId
@@ -43,21 +43,21 @@ class ItemHelper(private val viewHolder: PagingDataAdapterKtx<*>.ViewHolder) :
 
     fun setOnItemChildClickListener(
         onItemChildClickListener:
-            (adapter: PagingDataAdapterKtx<out Any>, v: View, position: Int) -> Unit
+            (adapter: PagingAdapter<out Any>, v: View, position: Int) -> Unit
     ) {
         mOnItemChildClickListener = onItemChildClickListener
     }
 
     fun setOnItemChildLongClickListener(
         onItemChildLongClickListener: (
-            adapter: PagingDataAdapterKtx<out Any>,
+            adapter: PagingAdapter<out Any>,
             v: View, position: Int
         ) -> Unit
     ) {
         mOnItemChildLongClickListener = onItemChildLongClickListener
     }
 
-    fun setRVAdapter(PagedListAdapter: PagingDataAdapterKtx<out Any>) {
+    fun setRVAdapter(PagedListAdapter: PagingAdapter<out Any>) {
         adapter = PagedListAdapter
     }
 

@@ -1,4 +1,4 @@
-package cn.leo.paging_ktx
+package cn.leo.paging_ktx.adapter
 
 /**
  * @author : leo

@@ -12,9 +12,9 @@ import cn.leo.paging_adapter.bean.NewsBean
 import cn.leo.paging_adapter.model.NewsViewModel
 import cn.leo.paging_adapter.net.view_model.ViewModelCreator
 import cn.leo.paging_adapter.view.StatusPager
-import cn.leo.paging_ktx.FloatDecoration
-import cn.leo.paging_ktx.SimplePagingAdapter
-import cn.leo.paging_ktx.State
+import cn.leo.paging_ktx.tools.FloatDecoration
+import cn.leo.paging_ktx.simple.SimplePagingAdapter
+import cn.leo.paging_ktx.adapter.State
 import com.scwang.smartrefresh.layout.constant.RefreshState
 import kotlinx.android.synthetic.main.activity_main.*
 

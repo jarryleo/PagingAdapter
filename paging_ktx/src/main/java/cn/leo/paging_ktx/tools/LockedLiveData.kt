@@ -1,4 +1,4 @@
-package cn.leo.paging_ktx
+package cn.leo.paging_ktx.tools
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner
@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  * @description : LiveData包装类,阻止数据倒灌,新加入观察者之后，通知被锁住，只有新的事件才能解锁；
  * 保证只有在事件发送之前注册的观察者才能收到通知；
  */
+@Suppress("UNUSED", "UNCHECKED_CAST", "MemberVisibilityCanBePrivate")
 class LockedLiveData<T> : MutableLiveData<T>() {
 
     open inner class WrapperObserver(

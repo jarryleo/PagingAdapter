@@ -1,4 +1,4 @@
-package cn.leo.paging_ktx
+package cn.leo.paging_ktx.simple
 
 import androidx.paging.*
 import kotlinx.coroutines.CoroutineScope

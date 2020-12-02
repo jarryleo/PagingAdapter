@@ -1,9 +1,11 @@
-package cn.leo.paging_ktx
+package cn.leo.paging_ktx.simple
 
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
+import cn.leo.paging_ktx.adapter.DifferData
+import cn.leo.paging_ktx.adapter.ItemHelper
 import kotlinx.coroutines.CoroutineScope
 
 /**
@@ -11,7 +13,7 @@ import kotlinx.coroutines.CoroutineScope
  * @date : 2020/11/27
  * @description : 简易列表Adapter ，对标ListView 的 ArrayAdapter
  */
-class ArrayPagingAdapter<T : DifferData>(
+class SimpleArrayAdapter<T : DifferData>(
     scope: CoroutineScope,
     @LayoutRes val resource: Int,
     @IdRes val textViewResourceId: Int = View.NO_ID,
@@ -28,7 +30,7 @@ class ArrayPagingAdapter<T : DifferData>(
 
     inner class ArrayHolder : SimpleHolder<DifferData>(resource) {
         override fun bindItem(
-            helper: ItemHelper,
+            item: ItemHelper,
             data: DifferData,
             payloads: MutableList<Any>?
         ) {
@@ -38,9 +40,9 @@ class ArrayPagingAdapter<T : DifferData>(
                 data.toString()
             }
             val textView = if (textViewResourceId == View.NO_ID) {
-                helper.itemView as? TextView
+                item.itemView as? TextView
             } else {
-                helper.findViewById(textViewResourceId)
+                item.findViewById(textViewResourceId)
             }
             textView?.text = text
         }

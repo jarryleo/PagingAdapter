@@ -3,8 +3,8 @@ package cn.leo.paging_adapter.model
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingSource
 import cn.leo.paging_adapter.bean.TitleBean
-import cn.leo.paging_ktx.DifferData
-import cn.leo.paging_ktx.SimplePager
+import cn.leo.paging_ktx.adapter.DifferData
+import cn.leo.paging_ktx.simple.SimplePager
 import java.text.SimpleDateFormat
 import java.util.*
 
