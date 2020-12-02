@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
 
 /**
- * @author : ling luo
+ * @author : leo
  * @date : 2020/11/16
  * @description : Recycler 拓展
  */

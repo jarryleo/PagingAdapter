@@ -49,7 +49,7 @@ interface DifferData {
 ```
 class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
     override fun bindItem(
-        helper: PagingDataAdapterKtx.ItemHelper,
+        helper: ItemHelper,
         data: NewsBean.StoriesBean,
         payloads: MutableList<Any>?
     ) {

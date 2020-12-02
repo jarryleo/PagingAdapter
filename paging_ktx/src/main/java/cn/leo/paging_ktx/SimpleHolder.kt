@@ -8,13 +8,13 @@ import androidx.annotation.LayoutRes
  * @description : 简易holder
  */
 abstract class SimpleHolder<T : DifferData>(@LayoutRes val res: Int) :
-    PagingDataAdapterKtx.ItemHolder<T>() {
+    ItemHolder<T>() {
 
     @LayoutRes
     fun getLayoutRes(): Int = res
 
     final override fun bindData(
-        helper: PagingDataAdapterKtx.ItemHelper,
+        helper: ItemHelper,
         data: T?,
         payloads: MutableList<Any>?
     ) {
@@ -23,7 +23,7 @@ abstract class SimpleHolder<T : DifferData>(@LayoutRes val res: Int) :
     }
 
     abstract fun bindItem(
-        helper: PagingDataAdapterKtx.ItemHelper,
+        helper: ItemHelper,
         data: T,
         payloads: MutableList<Any>?
     )

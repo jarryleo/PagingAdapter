@@ -15,5 +15,5 @@ interface Apis {
      * 知乎日报历史记录
      */
     @GET("before/{time}")
-    fun getNews(@Path("time") time: Long): Deferred<NewsBean>
+    fun getNewsAsync(@Path("time") time: Long): Deferred<NewsBean>
 }

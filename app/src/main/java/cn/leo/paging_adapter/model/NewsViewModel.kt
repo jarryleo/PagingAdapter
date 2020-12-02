@@ -29,7 +29,7 @@ class NewsViewModel : BaseViewModel() {
         val date = it.key ?: initialKey
         try {
             //从网络获取数据
-            val data = api.getNews(date).await()
+            val data = api.getNewsAsync(date).await()
             //添加title
             val list: MutableList<DifferData> = data.stories.toMutableList()
             list.add(0, TitleBean(date.toString()))

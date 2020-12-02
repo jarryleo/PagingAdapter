@@ -7,7 +7,7 @@ import androidx.annotation.LayoutRes
 import kotlinx.coroutines.CoroutineScope
 
 /**
- * @author : ling luo
+ * @author : leo
  * @date : 2020/11/27
  * @description : 简易列表Adapter ，对标ListView 的 ArrayAdapter
  */

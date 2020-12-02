@@ -6,13 +6,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.leo.paging_adapter.adapter.NewsHolder
+import cn.leo.paging_adapter.adapter.PlaceHolder
 import cn.leo.paging_adapter.adapter.TitleHolder
 import cn.leo.paging_adapter.bean.NewsBean
 import cn.leo.paging_adapter.model.NewsViewModel
 import cn.leo.paging_adapter.net.view_model.ViewModelCreator
 import cn.leo.paging_adapter.view.StatusPager
 import cn.leo.paging_ktx.FloatDecoration
-import cn.leo.paging_ktx.PagingPlaceHolder
 import cn.leo.paging_ktx.SimplePagingAdapter
 import cn.leo.paging_ktx.State
 import com.scwang.smartrefresh.layout.constant.RefreshState
@@ -23,11 +23,7 @@ class MainActivity : AppCompatActivity() {
     private val model by ViewModelCreator(NewsViewModel::class.java)
 
     private val adapter by lazy {
-        SimplePagingAdapter(
-            NewsHolder(),
-            TitleHolder(),
-            PagingPlaceHolder(R.layout.item_holder)
-        )
+        SimplePagingAdapter(NewsHolder(), TitleHolder(), PlaceHolder())
     }
 
     private val statePager by lazy {
@@ -71,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         //绑定数据源
         adapter.setPager(model.pager)
         //下拉刷新状态
-        adapter.setOnRefreshStateListener {
+        adapter.addOnRefreshStateListener {
             when (it) {
                 is State.Loading -> {
                     //如果是手动下拉刷新，则不展示loading页
@@ -92,7 +88,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         //加载更多状态
-        adapter.setOnLoadMoreStateListener {
+        adapter.addOnLoadMoreStateListener {
             when (it) {
                 is State.Loading -> {
                     //重置上拉加载状态，显示加载loading

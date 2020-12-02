@@ -1,11 +1,10 @@
 package cn.leo.paging_adapter.adapter
 
-import android.widget.ImageView
 import cn.leo.paging_adapter.R
 import cn.leo.paging_adapter.bean.NewsBean
 import cn.leo.paging_adapter.image.loadImage
 import cn.leo.paging_adapter.utils.dp
-import cn.leo.paging_ktx.PagingDataAdapterKtx
+import cn.leo.paging_ktx.ItemHelper
 import cn.leo.paging_ktx.SimpleHolder
 
 /**
@@ -15,12 +14,13 @@ import cn.leo.paging_ktx.SimpleHolder
  */
 class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
     override fun bindItem(
-        helper: PagingDataAdapterKtx.ItemHelper,
+        helper: ItemHelper,
         data: NewsBean.StoriesBean,
         payloads: MutableList<Any>?
     ) {
         helper.setText(R.id.tv_title, data.title)
-            .findViewById<ImageView>(R.id.iv_cover)
-            .loadImage(data.images?.get(0) ?: "", corners = 6.dp)
+            .setImage(R.id.iv_cover) {
+                loadImage(data.images?.get(0) ?: "", corners = 6.dp)
+            }
     }
 }
