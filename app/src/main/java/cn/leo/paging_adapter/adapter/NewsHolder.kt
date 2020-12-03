@@ -21,6 +21,6 @@ class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
     ) {
         tv_title.text = data.title
         iv_cover.loadImage(data.images?.get(0))
-        item.addOnClickListener(tv_title)
     }
+
 }
