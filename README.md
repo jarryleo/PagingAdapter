@@ -38,14 +38,16 @@ dependencies {
 
 #### 1. 数据模型bean类实现接口 DifferData
 ```
-//用作数据比较，执行RecyclerView条目动画,可以不实现方法，但是不建议这样做，性能差距就在这里体现
+//用作数据比较，执行RecyclerView条目动画,可以不实现方法,但是不建议这样做,性能差距就在这里体现
 interface DifferData {
     fun areItemsTheSame(d: DifferData): Boolean
     fun areContentsTheSame(d: DifferData): Boolean
     fun getChangePayload(d: DifferData): Any?
 }
 ```
+
 #### 2. 实现条目holder：继承SimpleHolder, 可直接使用布局中的id对view执行操作，放心使用，view可以复用
+
 ```
 class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
     override fun bindItem(
@@ -57,16 +59,21 @@ class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
         iv_cover.loadImage(data.images?.get(0))
     }
 }
+```
+
 `注意：直接使用布局中的id对view执行操作，需要在build里加上下面代码以开启 kotlin对 view的支持`
+
 ```
     androidExtensions {
         experimental = true
     }
 ```
-加在build的 android 标签里面
 
-```
+`加在build的 android 标签里面`
+
+
 #### 3. 设置Adapter
+
 ```
  recyclerView.adapter = SimplePagingAdapter(NewsHolder(), TitleHolder())
 
