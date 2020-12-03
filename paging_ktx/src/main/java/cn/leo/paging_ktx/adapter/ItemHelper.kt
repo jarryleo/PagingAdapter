@@ -69,6 +69,11 @@ class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
         return mTags[key]
     }
 
+    fun bind(block: View.() -> Unit): ItemHelper {
+        block(itemView)
+        return this
+    }
+
     @Suppress("UNCHECKED_CAST")
     fun <V : View> findViewById(@IdRes viewId: Int): V {
         val v = viewCache.get(viewId)
@@ -323,6 +328,16 @@ class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
     }
 
     /**
+     * 给条目中的view添加点击事件
+     *
+     * @param view 控件
+     */
+    fun addOnClickListener(view: View): ItemHelper {
+        addOnClickListener(view.id)
+        return this
+    }
+
+    /**
      * 给条目中的view添加长按事件
      *
      * @param viewId 控件id
@@ -333,6 +348,16 @@ class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
             getViewById<View>(viewId) { it.setOnLongClickListener(this) }
             longClickListenerCache.add(viewId)
         }
+        return this
+    }
+
+    /**
+     * 给条目中的view添加长按事件
+     *
+     * @param view 控件
+     */
+    fun addOnLongClickListener(view: View): ItemHelper {
+        addOnLongClickListener(view.id)
         return this
     }
 
@@ -373,11 +398,4 @@ class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
         return mItemHolder
     }
 
-    fun setItemHolder(itemHolder: ItemHolder<*>, payloads: MutableList<Any>? = null) {
-        if (mItemHolder == null) {
-            mItemHolder = itemHolder as? ItemHolder<Any>
-            mItemHolder?.initView(this, adapter.getData(position))
-        }
-        mItemHolder?.bindData(this, adapter.getData(position), payloads)
-    }
 }

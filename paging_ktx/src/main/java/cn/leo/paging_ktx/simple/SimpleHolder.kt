@@ -4,6 +4,7 @@ import androidx.annotation.LayoutRes
 import cn.leo.paging_ktx.adapter.DifferData
 import cn.leo.paging_ktx.adapter.ItemHelper
 import cn.leo.paging_ktx.adapter.ItemHolder
+import kotlinx.android.extensions.LayoutContainer
 
 /**
  * @author : leo

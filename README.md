@@ -30,7 +30,7 @@ allprojects {
 2. 依赖：在模块build.gradle添加
 ```
 dependencies {
-	    implementation 'com.github.jarryleo:PagingAdapter:1.1.2'
+	    implementation 'com.github.jarryleo:PagingAdapter:2.0.0'
 }
 ```
 
@@ -45,7 +45,7 @@ interface DifferData {
     fun getChangePayload(d: DifferData): Any?
 }
 ```
-#### 2. 实现条目holder：继承SimpleHolder
+#### 2. 实现条目holder：继承SimpleHolder, 可直接使用布局中的id对view执行操作，放心使用，view可以复用
 ```
 class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
     override fun bindItem(
@@ -53,10 +53,18 @@ class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
         data: NewsBean.StoriesBean,
         payloads: MutableList<Any>?
     ) {
-        item.setText(R.id.tv_title, data.title)
-            .setImage(R.id.iv_cover) { loadImage(data.images?.get(0) ?: "", corners = 6.dp) }
+        tv_title.text = data.title
+        iv_cover.loadImage(data.images?.get(0))
     }
 }
+`注意：直接使用布局中的id对view执行操作，需要在build里加上下面代码以开启 kotlin对 view的支持`
+```
+    androidExtensions {
+        experimental = true
+    }
+```
+加在build的 android 标签里面
+
 ```
 #### 3. 设置Adapter
 ```

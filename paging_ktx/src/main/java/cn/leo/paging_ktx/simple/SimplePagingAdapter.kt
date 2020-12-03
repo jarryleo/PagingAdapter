@@ -84,6 +84,6 @@ open class SimplePagingAdapter(
 
     override fun bindData(item: ItemHelper, data: DifferData?, payloads: MutableList<Any>?) {
         val holder = getHolder(data) ?: return
-        item.setItemHolder(holder, payloads)
+        item.setItemHolder(holder::class.java, payloads)
     }
 }

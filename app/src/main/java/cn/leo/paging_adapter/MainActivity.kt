@@ -3,6 +3,7 @@ package cn.leo.paging_adapter
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import cn.leo.paging_adapter.adapter.NewsHolder
@@ -54,6 +55,13 @@ class MainActivity : AppCompatActivity() {
             val news = a.getData(position) as? NewsBean.StoriesBean
             news?.let {
                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it.url)))
+            }
+        }
+        //条目子view点击事件
+        adapter.setOnItemChildClickListener { a, _, position ->
+            val news = a.getData(position) as? NewsBean.StoriesBean
+            news?.let {
+                Toast.makeText(this, it.title, Toast.LENGTH_SHORT).show()
             }
         }
         //设置下拉刷新
