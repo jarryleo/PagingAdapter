@@ -9,6 +9,8 @@ import cn.leo.paging_adapter.adapter.NewsHolder
 import cn.leo.paging_adapter.adapter.PlaceHolder
 import cn.leo.paging_adapter.adapter.TitleHolder
 import cn.leo.paging_adapter.bean.NewsBean
+import cn.leo.paging_adapter.databinding.ActivityMainBinding
+import cn.leo.paging_adapter.ext.inflate
 import cn.leo.paging_adapter.model.NewsViewModel
 import cn.leo.paging_adapter.net.view_model.ViewModelCreator
 import cn.leo.paging_adapter.utils.bind
@@ -24,6 +26,8 @@ class MainActivity : AppCompatActivity() {
         SimplePagingAdapter(NewsHolder(), TitleHolder(), PlaceHolder())
     }
 
+    private val binding: ActivityMainBinding by inflate()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -31,10 +35,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initRv() {
-        rv_news.layoutManager = LinearLayoutManager(this)
+        binding.rvNews.layoutManager = LinearLayoutManager(this)
         //悬浮条目
-        rv_news.addItemDecoration(FloatDecoration(R.layout.item_title))
-        rv_news.adapter = adapter
+        binding.rvNews.addItemDecoration(FloatDecoration(R.layout.item_title))
+        binding.rvNews.adapter = adapter
         //点击事件
         adapter.setOnItemClickListener { a, _, position ->
             val news = a.getData(position) as? NewsBean.StoriesBean
