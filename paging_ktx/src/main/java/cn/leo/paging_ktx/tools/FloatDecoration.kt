@@ -2,7 +2,6 @@ package cn.leo.paging_ktx.tools
 
 import android.graphics.Canvas
 import android.graphics.Rect
-import android.graphics.Region
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
@@ -119,7 +118,7 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
         mClipBounds.top = mRecyclerViewPaddingTop + mHeaderTopMargin
         mClipBounds.bottom = top + mClipBounds.top + v.height
         c.save()
-        c.clipRect(mClipBounds, Region.Op.INTERSECT)
+        c.clipRect(mClipBounds)
         c.translate(
             mRecyclerViewPaddingLeft + mHeaderLeftMargin * 1f,
             top + mRecyclerViewPaddingTop + mHeaderTopMargin * 1f
@@ -296,7 +295,7 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
         val maxHeight =
             parent.height - mRecyclerViewPaddingTop - mRecyclerViewPaddingBottom
         // 不能超过maxHeight
-        heightSize = Math.min(heightSize, maxHeight)
+        heightSize = minOf(heightSize, maxHeight)
 
         // 因为标签默认宽度占满parent，所以宽度强制为RecyclerView的宽度减去padding
         var widthSize = parent.width - mRecyclerViewPaddingLeft -
