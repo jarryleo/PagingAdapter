@@ -39,6 +39,10 @@ class SimplePager<K : Any, V : Any>(
                         "one of pagingSource or loadData must not null"
                     )
                 }
+
+                override fun getRefreshKey(state: PagingState<K, V>): K? {
+                    return initialKey
+                }
             }
         }.flow.cachedIn(scope)
     }

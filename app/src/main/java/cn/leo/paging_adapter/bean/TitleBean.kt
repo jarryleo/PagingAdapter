@@ -10,7 +10,6 @@ import cn.leo.paging_ktx.adapter.DifferData
 data class TitleBean(
     val title: String
 ) : DifferData {
-
     override fun areItemsTheSame(data: DifferData): Boolean {
         return (data as? TitleBean)?.title == title
     }

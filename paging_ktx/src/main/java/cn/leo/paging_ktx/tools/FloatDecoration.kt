@@ -241,13 +241,13 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
             mHeightCache[mFloatPosition] = view.height
             mTypeCache[parent.adapter!!.getItemViewType(mFloatPosition)] = view.height
         }
-        return getHolder(parent)!!.itemView
+        return getHolder(parent).itemView
     }
 
     /**
      * 获取之前要悬浮的holder
      */
-    private fun getHolder(recyclerView: RecyclerView): RecyclerView.ViewHolder? {
+    private fun getHolder(recyclerView: RecyclerView): RecyclerView.ViewHolder {
         val adapter = recyclerView.adapter
         val viewType = adapter!!.getItemViewType(mFloatPosition)
         var holder = mHolderCache[viewType]

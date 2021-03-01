@@ -5,10 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IntRange
 import androidx.annotation.LayoutRes
-import androidx.paging.LoadState
-import androidx.paging.PagingData
-import androidx.paging.PagingDataAdapter
-import androidx.paging.filter
+import androidx.paging.*
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -121,7 +118,7 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
         if (!this::mPagingData.isInitialized || !this::mScope.isInitialized) {
             throw IllegalArgumentException("To add data, you must use the 'setPagingData' method")
         }
-        mPagingData = mPagingData.insertFooterItem(item)
+        mPagingData = mPagingData.insertFooterItem(item = item)
         submitPagingData()
     }
 
@@ -132,7 +129,7 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
         if (!this::mPagingData.isInitialized || !this::mScope.isInitialized) {
             throw IllegalArgumentException("To add data, you must use the 'setPagingData' method")
         }
-        mPagingData = mPagingData.insertHeaderItem(item)
+        mPagingData = mPagingData.insertHeaderItem(item = item)
         submitPagingData()
     }
 
