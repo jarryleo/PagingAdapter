@@ -14,6 +14,9 @@ import cn.leo.paging_ktx.simple.SimpleHolder
  */
 class TitleHolder : SimpleHolder<TitleBean>(R.layout.item_title) {
     override fun bindItem(item: ItemHelper, data: TitleBean, payloads: MutableList<Any>?) {
-        item.binding<ItemTitleBinding>()?.data = data
+        item.binding<ItemTitleBinding>()?.let {
+            it.data = data
+            it.executePendingBindings() //悬浮条目，需要这句，否则悬浮条目无数据
+        }
     }
 }

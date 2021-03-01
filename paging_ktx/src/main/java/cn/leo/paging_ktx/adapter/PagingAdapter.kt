@@ -78,7 +78,12 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
     }
 
     fun getData(position: Int): T? {
-        return getItem(position)
+        if (position < 0 || position >= itemCount) return null
+        return try {
+            getItem(position)
+        } catch (e: Exception) {
+            null
+        }
     }
     //</editor-fold>
 

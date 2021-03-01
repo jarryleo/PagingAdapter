@@ -27,7 +27,7 @@ class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
     @get:LayoutRes
     var itemLayoutResId: Int = 0
     val position get() = viewHolder.mPosition
-    val itemView: View = viewHolder.itemView
+    val itemView get() = viewHolder.itemView
     val context: Context = itemView.context
     var tag: Any? = null
 
@@ -57,8 +57,8 @@ class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
         mOnItemChildLongClickListener = onItemChildLongClickListener
     }
 
-    fun setRVAdapter(PagedListAdapter: PagingAdapter<out Any>) {
-        adapter = PagedListAdapter
+    fun setRVAdapter(pagedListAdapter: PagingAdapter<out Any>) {
+        adapter = pagedListAdapter
     }
 
     fun setTag(key: String, tag: Any) {
