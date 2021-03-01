@@ -8,9 +8,9 @@
 - 使用paging3封装，具有paging3完全优势，快速实现列表分页，无缝加载；
 - 可以对条目实现增删改，弥补paging无法修改数据问题；
 - 不需要实现paging的数据库缓存，直接网络请求即可；
-- 多类型条目解耦，新增新的条目完全不需要修改原有代码，直接新建holder即可；
-- 已经完全不需要再自己实现adapter了；
-- holder对UI的操作全由helper实现链式操作，不用再绑定viewId了；
+- 多类型条目解耦，新增新的条目类型完全不需要修改原有代码，直接新建holder即可；
+- 完全不需要自己实现adapter了，每种条目写一个简单的holder即可实现列表；
+- 支持DataBinding和布局id设置数据；
 
 
 
@@ -30,7 +30,7 @@ allprojects {
 2. 依赖：在模块build.gradle添加
 ```
 dependencies {
-	    implementation 'com.github.jarryleo:PagingAdapter:2.0.0'
+	    implementation 'com.github.jarryleo:PagingAdapter:2.0.1'
 }
 ```
 
@@ -46,7 +46,7 @@ interface DifferData {
 }
 ```
 
-#### 2. 实现条目holder：继承SimpleHolder, 可直接使用布局中的id对view执行操作，放心使用，view可以复用
+#### 2. 实现条目holder：继承SimpleHolder,用DataBinding或者也可直接使用布局中的id对view执行操作，放心使用，view可以复用
 
 ```
 class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
@@ -55,20 +55,18 @@ class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
         data: NewsBean.StoriesBean,
         payloads: MutableList<Any>?
     ) {
-        tv_title.text = data.title
-        iv_cover.loadImage(data.images?.get(0))
+        item.binding<ItemNewsBinding>()?.data = data
     }
 }
 ```
 
-`注意：直接使用布局中的id对view执行操作，需要在build里加上下面代码以开启 kotlin对 view的支持`
+`注意：直接使用布局中的id对view执行操作，需要在app模块build里加上下面代码以开启 kotlin对view的支持`
 
 ```
     androidExtensions {
         experimental = true
     }
 ```
-
 `加在build的 android 标签里面`
 
 
