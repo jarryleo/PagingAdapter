@@ -12,5 +12,5 @@ android {
 }
 
 dependencies {
-    api 'androidx.paging:paging-runtime-ktx:3.0.0-beta02'
+    api 'androidx.paging:paging-runtime-ktx:3.0.0-rc01'
 }
