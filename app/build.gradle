@@ -78,5 +78,5 @@ dependencies {
     implementation 'com.scwang.smart:refresh-footer-classics:2.0.3'
     //paging
     implementation project(path: ':paging_ktx')
-//    implementation 'com.github.jarryleo:PagingAdapter:2.0.1'
+//    implementation 'com.github.jarryleo:PagingAdapter:3.0.0'
 }
