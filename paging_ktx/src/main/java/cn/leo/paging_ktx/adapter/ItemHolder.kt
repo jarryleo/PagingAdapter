@@ -1,9 +1,5 @@
 package cn.leo.paging_ktx.adapter
 
-import android.view.View
-import androidx.annotation.CallSuper
-import kotlinx.android.extensions.LayoutContainer
-
 /**
  * @author : leo
  * @date : 2020/12/2
@@ -11,13 +7,7 @@ import kotlinx.android.extensions.LayoutContainer
  */
 
 @Suppress("UNUSED", "UNCHECKED_CAST", "MemberVisibilityCanBePrivate")
-abstract class ItemHolder<T : Any> : LayoutContainer {
-
-    protected var itemView: View? = null
-
-    override val containerView: View?
-        get() = itemView
-
+abstract class ItemHolder<T : Any> {
     /**
      * 绑定数据
      *
@@ -32,11 +22,8 @@ abstract class ItemHolder<T : Any> : LayoutContainer {
      * @param item   帮助类
      * @param data   数据
      */
-    @CallSuper
     open fun initView(item: ItemHelper, data: T?) {
-        itemView = item.itemView
     }
-
 
     /**
      * 被回收时调用，用来释放一些资源，或者重置数据等
@@ -44,6 +31,5 @@ abstract class ItemHolder<T : Any> : LayoutContainer {
      * @param item   帮助类
      */
     open fun onViewDetach(item: ItemHelper) {}
-
 
 }

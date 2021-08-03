@@ -30,7 +30,7 @@ allprojects {
 2. 依赖：在模块build.gradle添加
 ```
 dependencies {
-	    implementation 'com.github.jarryleo:PagingAdapter:3.0.0'
+	    implementation 'com.github.jarryleo:PagingAdapter:3.0.1'
 }
 ```
 
@@ -59,16 +59,6 @@ class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
     }
 }
 ```
-
-`注意：直接使用布局中的id对view执行操作，需要在app模块build里加上下面代码以开启 kotlin对view的支持`
-
-```
-    androidExtensions {
-        experimental = true
-    }
-```
-`加在build的 android 标签里面`
-
 
 #### 3. 设置Adapter
 
