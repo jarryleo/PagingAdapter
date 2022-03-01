@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import cn.leo.paging_adapter.bean.NewsBean
 import cn.leo.paging_adapter.databinding.ActivityMainBinding
 import cn.leo.paging_adapter.ext.binding
+import cn.leo.paging_adapter.ext.main
 import cn.leo.paging_adapter.holder.NewsHolder
 import cn.leo.paging_adapter.holder.PlaceHolder
 import cn.leo.paging_adapter.holder.TitleHolder
@@ -25,7 +26,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding.adapter = adapter
         binding.model = model
-        initRv()
+        main {
+            initRv()
+        }
     }
 
     private fun initRv() {
