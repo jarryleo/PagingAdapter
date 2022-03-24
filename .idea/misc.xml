@@ -5,6 +5,17 @@
       <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
     </configurations>
   </component>
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.14505549949545912" />
+        <entry key="app/src/main/res/layout/item_holder.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/item_news.xml" value="0.14505549949545912" />
+        <entry key="app/src/main/res/layout/item_title.xml" value="0.14505549949545912" />
+        <entry key="app/src/main/res/layout/state_empty.xml" value="0.14505549949545912" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectPlainTextFileTypeManager">
     <file url="file://$PROJECT_DIR$/README.md" />
   </component>
