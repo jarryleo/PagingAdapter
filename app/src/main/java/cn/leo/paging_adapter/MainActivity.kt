@@ -3,7 +3,6 @@ package cn.leo.paging_adapter
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import cn.leo.paging_adapter.databinding.ActivityMainBinding
@@ -26,24 +25,10 @@ class MainActivity : AppCompatActivity() {
                 onItemClick {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it.data.url)))
                 }
-                onItemChildClick(R.id.iv_cover) {
-                    Toast.makeText(this@MainActivity, "点击图片= ${it.position}", Toast.LENGTH_SHORT)
-                        .show()
-                }
-                onItemChildLongClick(R.id.iv_cover) {
-                    Toast.makeText(this@MainActivity, "长按图片= ${it.position}", Toast.LENGTH_SHORT)
-                        .show()
-                }
             }
-            addHolder(TitleHolder(), true) {
-                onItemLongClick {
-                    Toast.makeText(this@MainActivity, "标题长按测试= ${it.position}", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
+            addHolder(TitleHolder(), true)
             addHolder(PlaceHolder())
             setPager(model.pager)
         }
-
     }
 }

@@ -181,6 +181,16 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
             return true
         }
 
+        override fun onLongPress(e: MotionEvent) {
+            if (mClipBounds.contains(e.x.toInt(), e.y.toInt())) {
+                childLongClick(
+                    mFloatView,
+                    e.x - mRecyclerViewPaddingLeft,
+                    e.y - mRecyclerViewPaddingTop
+                )
+            }
+        }
+
         /**
          * 遍历容器和它的子view，传递点击事件
          */
@@ -199,6 +209,28 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
                 for (i in 0 until childCount) {
                     val view = v.getChildAt(i)
                     childClick(view, x, y)
+                }
+            }
+        }
+
+        /**
+         * 遍历容器和它的子view，传递长按事件
+         */
+        private fun childLongClick(
+            v: View?,
+            x: Float,
+            y: Float
+        ) {
+            val rect = Rect()
+            v!!.getGlobalVisibleRect(rect)
+            if (rect.contains(x.toInt(), y.toInt())) {
+                v.performLongClick()
+            }
+            if (v is ViewGroup) {
+                val childCount = v.childCount
+                for (i in 0 until childCount) {
+                    val view = v.getChildAt(i)
+                    childLongClick(view, x, y)
                 }
             }
         }
