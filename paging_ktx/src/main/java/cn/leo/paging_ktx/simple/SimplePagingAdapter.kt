@@ -81,7 +81,7 @@ open class SimplePagingAdapter(
         //没有对应数据类型的holder
         val holder = getHolder(getData(position))
             ?: throw RuntimeException("SimplePagingAdapter : no match holder")
-        return holder.getLayoutRes()
+        return holder.getItemLayout(position)
     }
 
     override fun bindData(item: ItemHelper, data: DifferData?, payloads: MutableList<Any>?) {

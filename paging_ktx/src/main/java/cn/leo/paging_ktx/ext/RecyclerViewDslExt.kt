@@ -5,7 +5,6 @@ import androidx.annotation.IdRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.leo.paging_ktx.adapter.DifferData
-import cn.leo.paging_ktx.adapter.ItemHolder
 import cn.leo.paging_ktx.simple.SimpleHolder
 import cn.leo.paging_ktx.simple.SimplePager
 import cn.leo.paging_ktx.simple.SimplePagingAdapter
@@ -186,7 +185,7 @@ class DslSimpleAdapterImpl(val recyclerView: RecyclerView) : DslSimpleAdapterBui
             clickBuilder.dsl()
         }
         if (isFloatItem) {
-            recyclerView.addItemDecoration(FloatDecoration(holder.getLayoutRes()))
+            recyclerView.addItemDecoration(FloatDecoration(holder.getItemLayout()))
         }
         adapter.addHolder(holder)
     }

@@ -11,11 +11,11 @@ import cn.leo.paging_ktx.ext.getSuperClassGenericType
  * @date : 2020/11/10
  * @description : 简易holder
  */
-abstract class SimpleHolder<T : DifferData>(@LayoutRes val res: Int) :
+abstract class SimpleHolder<T : DifferData>(@LayoutRes val res: Int = 0) :
     ItemHolder<T>() {
 
     @LayoutRes
-    fun getLayoutRes(): Int = res
+    open fun getItemLayout(position: Int = -1): Int = res
 
     fun getDataClassType() = this::class.java.getSuperClassGenericType<T>()
 
