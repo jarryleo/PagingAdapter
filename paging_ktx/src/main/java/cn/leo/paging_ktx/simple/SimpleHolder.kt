@@ -19,12 +19,25 @@ abstract class SimpleHolder<T : DifferData>(@LayoutRes val res: Int) :
 
     fun getDataClassType() = this::class.java.getSuperClassGenericType<T>()
 
+    /**
+     * 子view点击id列表
+     */
+    internal val itemChildClickIds = hashSetOf<Int>()
+
+    /**
+     * 子view长按id列表
+     */
+    internal val itemChildLongClickIds = hashSetOf<Int>()
+
+
     final override fun bindData(
         item: ItemHelper,
         data: T?,
         payloads: MutableList<Any>?
     ) {
         if (data == null) return //简易holder data不为空
+        itemChildClickIds.forEach(item::addOnClickListener)
+        itemChildLongClickIds.forEach(item::addOnLongClickListener)
         bindItem(item, data, payloads)
     }
 
