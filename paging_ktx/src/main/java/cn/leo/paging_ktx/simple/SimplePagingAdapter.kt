@@ -38,12 +38,14 @@ open class SimplePagingAdapter(
         cacheHolder(holders)
     }
 
+    fun addHolder(holder: SimpleHolder<*>) {
+        val key = holder::class.java.getSuperClassGenericType<DifferData>()
+        val value = holder as? SimpleHolder<DifferData>
+        holderMap[key] = value
+    }
+
     private fun cacheHolder(holders: Array<out SimpleHolder<*>>) {
-        holders.forEach {
-            val key = it::class.java.getSuperClassGenericType<DifferData>()
-            val value = it as? SimpleHolder<DifferData>
-            holderMap[key] = value
-        }
+        holders.forEach { addHolder(it) }
     }
 
     protected fun setHolder(key: Class<DifferData>, holder: SimpleHolder<DifferData>) {

@@ -303,6 +303,13 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
     ) {
         mOnItemChildClickListener = onItemChildClickListener
     }
+
+    fun setOnItemChildLongClickListener(
+        onItemChildLongClickListener:
+            (adapter: PagingAdapter<out Any>, v: View, position: Int) -> Unit
+    ) {
+        mOnItemChildLongClickListener = onItemChildLongClickListener
+    }
     //</editor-fold>
 
     //<editor-fold desc="状态监听">

@@ -4,7 +4,7 @@ import androidx.annotation.LayoutRes
 import cn.leo.paging_ktx.adapter.DifferData
 import cn.leo.paging_ktx.adapter.ItemHelper
 import cn.leo.paging_ktx.adapter.ItemHolder
-import kotlinx.android.extensions.LayoutContainer
+import cn.leo.paging_ktx.ext.getSuperClassGenericType
 
 /**
  * @author : leo
@@ -16,6 +16,8 @@ abstract class SimpleHolder<T : DifferData>(@LayoutRes val res: Int) :
 
     @LayoutRes
     fun getLayoutRes(): Int = res
+
+    fun getDataClassType() = this::class.java.getSuperClassGenericType<T>()
 
     final override fun bindData(
         item: ItemHelper,
