@@ -28,6 +28,8 @@ interface DslSimpleAdapterBuilder {
         dsl: (@ClickDsl DslClickBuilder<T>.() -> Unit)? = null
     )
 
+    fun getAdapter(): SimplePagingAdapter
+
     fun setLayoutManager(layoutManager: RecyclerView.LayoutManager)
 
     fun <T : DifferData> setPager(pager: SimplePager<*, T>)
@@ -175,6 +177,10 @@ class DslSimpleAdapterImpl(val recyclerView: RecyclerView) : DslSimpleAdapterBui
 
     private val clickEventStore = ClickEventStore(recyclerView, adapter)
 
+    override fun getAdapter(): SimplePagingAdapter {
+        return adapter
+    }
+
     override fun <T : DifferData> addHolder(
         holder: SimpleHolder<T>,
         isFloatItem: Boolean,
@@ -201,8 +207,8 @@ class DslSimpleAdapterImpl(val recyclerView: RecyclerView) : DslSimpleAdapterBui
 
 fun RecyclerView.buildAdapter(init: @ClickDsl DslSimpleAdapterBuilder.() -> Unit): SimplePagingAdapter {
     val dslSimpleAdapterImpl = DslSimpleAdapterImpl(this)
-    dslSimpleAdapterImpl.init()
     layoutManager = dslSimpleAdapterImpl.mLayoutManager
     adapter = dslSimpleAdapterImpl.adapter
+    dslSimpleAdapterImpl.init()
     return dslSimpleAdapterImpl.adapter
 }

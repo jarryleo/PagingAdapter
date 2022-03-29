@@ -379,6 +379,7 @@ class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
     var mItemHolder: ItemHolder<Any>? = null
 
     @Suppress("UNCHECKED_CAST")
+    @Deprecated("作废")
     fun setItemHolder(
         itemHolderClass: Class<out ItemHolder<out Any>>,
         payloads: MutableList<Any>? = null
