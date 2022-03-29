@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import cn.leo.paging_adapter.databinding.ActivityMainBinding
 import cn.leo.paging_adapter.ext.binding
+import cn.leo.paging_adapter.ext.toast
 import cn.leo.paging_adapter.holder.NewsHolder
 import cn.leo.paging_adapter.holder.PlaceHolder
 import cn.leo.paging_adapter.holder.TitleHolder
@@ -25,8 +26,15 @@ class MainActivity : AppCompatActivity() {
                 onItemClick {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it.data.url)))
                 }
+                onItemChildClick(R.id.iv_cover) {
+                    toast(it.data.title)
+                }
             }
-            addHolder(TitleHolder(), true)
+            addHolder(TitleHolder(), true) {
+                onItemClick {
+                    toast(it.data.title)
+                }
+            }
             addHolder(PlaceHolder())
             setPager(model.pager)
         }

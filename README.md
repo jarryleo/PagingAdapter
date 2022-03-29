@@ -66,9 +66,26 @@ class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
  recyclerView.adapter = SimplePagingAdapter(NewsHolder(), TitleHolder())
 
 ```
-
-`多条目类型就实现多个holder，直接传给SimplePagingAdapter的构造即可，构造支持可变参数`
-
+##### dsl 用法：
+```
+binding.adapter = binding.rvNews.buildAdapter {
+            addHolder(NewsHolder()) {
+                onItemClick {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it.data.url)))
+                }
+                onItemChildClick(R.id.iv_cover) {
+                    toast(it.data.title)
+                }
+            }
+            addHolder(TitleHolder(), true) {
+                onItemClick {
+                    toast(it.data.title)
+                }
+            }
+            addHolder(PlaceHolder())
+            setPager(model.pager)
+        }
+```
 
 #### 4. 给adapter设置数据
 

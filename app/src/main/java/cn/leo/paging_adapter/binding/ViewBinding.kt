@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.leo.paging_adapter.R
 import cn.leo.paging_adapter.ext.singleClick
 import cn.leo.paging_adapter.image.loadImage
+import cn.leo.paging_adapter.utils.dp
 import cn.leo.paging_adapter.view.StatusPager
 import cn.leo.paging_ktx.adapter.DifferData
 import cn.leo.paging_ktx.adapter.State
@@ -52,7 +53,7 @@ fun bindingClick(view: View, clickHandler: ClickHandler) {
  */
 @BindingAdapter("bindImage")
 fun bindingImage(view: ImageView, url: String) {
-    view.loadImage(url)
+    view.loadImage(url, corners = 3.dp)
 }
 
 /**
