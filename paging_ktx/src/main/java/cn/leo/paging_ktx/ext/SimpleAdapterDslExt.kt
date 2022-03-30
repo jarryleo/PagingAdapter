@@ -5,6 +5,7 @@ import androidx.annotation.IdRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.leo.paging_ktx.adapter.DifferData
+import cn.leo.paging_ktx.simple.SimpleCheckedAdapter
 import cn.leo.paging_ktx.simple.SimpleHolder
 import cn.leo.paging_ktx.simple.SimplePager
 import cn.leo.paging_ktx.simple.SimplePagingAdapter
@@ -21,18 +22,28 @@ import cn.leo.paging_ktx.tools.FloatDecoration
 @Target(AnnotationTarget.TYPE)
 annotation class ClickDsl
 
-interface DslSimpleAdapterBuilder {
+interface DslAdapterBuilder {
+    fun setLayoutManager(layoutManager: RecyclerView.LayoutManager)
+
+    fun <T : DifferData> setPager(pager: SimplePager<*, T>)
+}
+
+interface DslSimpleAdapterBuilder : DslAdapterBuilder {
+    fun getAdapter(): SimplePagingAdapter
     fun <T : DifferData> addHolder(
         holder: SimpleHolder<T>,
         isFloatItem: Boolean = false,
         dsl: (@ClickDsl DslClickBuilder<T>.() -> Unit)? = null
     )
+}
 
-    fun getAdapter(): SimplePagingAdapter
-
-    fun setLayoutManager(layoutManager: RecyclerView.LayoutManager)
-
-    fun <T : DifferData> setPager(pager: SimplePager<*, T>)
+interface DslSimpleCheckedAdapterBuilder : DslAdapterBuilder {
+    fun getAdapter(): SimpleCheckedAdapter
+    fun <T : DifferData> addHolder(
+        holder: SimpleHolder<T>,
+        isFloatItem: Boolean = false,
+        dsl: (@ClickDsl DslClickBuilder<T>.() -> Unit)? = null
+    )
 }
 
 interface DslClickBuilder<T : DifferData> {
@@ -205,8 +216,57 @@ class DslSimpleAdapterImpl(val recyclerView: RecyclerView) : DslSimpleAdapterBui
     }
 }
 
+class DslSimpleCheckedAdapterImpl(val recyclerView: RecyclerView) : DslSimpleCheckedAdapterBuilder {
+    internal val adapter = SimpleCheckedAdapter()
+    internal var mLayoutManager: RecyclerView.LayoutManager =
+        LinearLayoutManager(recyclerView.context)
+
+    private val clickEventStore = ClickEventStore(recyclerView, adapter)
+
+    override fun getAdapter(): SimpleCheckedAdapter {
+        return adapter
+    }
+
+    override fun <T : DifferData> addHolder(
+        holder: SimpleHolder<T>,
+        isFloatItem: Boolean,
+        dsl: (@ClickDsl DslClickBuilder<T>.() -> Unit)?
+    ) {
+        val clickBuilder = DslClickBuilderImpl(holder, clickEventStore)
+        if (dsl != null) {
+            clickBuilder.dsl()
+        }
+        if (isFloatItem) {
+            recyclerView.addItemDecoration(FloatDecoration(holder.getItemLayout()))
+        }
+        adapter.addHolder(holder)
+    }
+
+    override fun setLayoutManager(layoutManager: RecyclerView.LayoutManager) {
+        mLayoutManager = layoutManager
+    }
+
+    override fun <T : DifferData> setPager(pager: SimplePager<*, T>) {
+        adapter.setPager(pager)
+    }
+}
+
+/**
+ * 构建简易列表适配器
+ */
 fun RecyclerView.buildAdapter(init: @ClickDsl DslSimpleAdapterBuilder.() -> Unit): SimplePagingAdapter {
     val dslSimpleAdapterImpl = DslSimpleAdapterImpl(this)
+    layoutManager = dslSimpleAdapterImpl.mLayoutManager
+    adapter = dslSimpleAdapterImpl.adapter
+    dslSimpleAdapterImpl.init()
+    return dslSimpleAdapterImpl.adapter
+}
+
+/**
+ * 构建简易选择列表适配器
+ */
+fun RecyclerView.buildCheckedAdapter(init: @ClickDsl DslSimpleCheckedAdapterBuilder.() -> Unit): SimpleCheckedAdapter {
+    val dslSimpleAdapterImpl = DslSimpleCheckedAdapterImpl(this)
     layoutManager = dslSimpleAdapterImpl.mLayoutManager
     adapter = dslSimpleAdapterImpl.adapter
     dslSimpleAdapterImpl.init()
