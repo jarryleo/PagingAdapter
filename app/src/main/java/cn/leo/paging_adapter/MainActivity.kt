@@ -13,6 +13,7 @@ import cn.leo.paging_adapter.holder.PlaceHolder
 import cn.leo.paging_adapter.holder.TitleHolder
 import cn.leo.paging_adapter.model.NewsViewModel
 import cn.leo.paging_ktx.ext.buildCheckedAdapter
+import cn.leo.paging_ktx.ext.isChecked
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,9 +31,12 @@ class MainActivity : AppCompatActivity() {
                     toast(it.data.title)
                 }
             }
-            addHolder(TitleHolder()) {
+            addHolder(TitleHolder(), isClickChecked = false) {
                 onChecked {
                     toast("${it.position} = ${it.isChecked} ${it.checkedCount}/${it.allCanCheckedCount}")
+                }
+                onItemLongClick {
+                    it.isChecked = !it.isChecked
                 }
             }
             addHolder(PlaceHolder())

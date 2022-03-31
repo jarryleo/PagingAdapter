@@ -14,7 +14,7 @@ import cn.leo.paging_ktx.tools.FloatDecoration
 /**
  * @author : ling luo
  * @date : 2022/3/24
- * @description : RecyclerView dsl拓展
+ * @description : PagingAdapter dsl拓展
  */
 
 //作用域进行限制
@@ -56,6 +56,7 @@ interface DslClickBuilder<T : DifferData> {
 
 interface DslCheckedBuilder<T : DifferData> : DslClickBuilder<T> {
     fun onChecked(onChecked: OnItemChecked)
+    fun setChecked(position: Int, isChecked: Boolean)
 }
 
 data class ItemInfo<T : DifferData>(
@@ -65,6 +66,22 @@ data class ItemInfo<T : DifferData>(
     val adapter: SimplePagingAdapter,
     val recyclerView: RecyclerView,
 )
+
+/**
+ * 条目选择拓展属性
+ */
+var <T : DifferData> ItemInfo<T>.isChecked: Boolean
+    get() {
+        if (adapter is SimpleCheckedAdapter) {
+            return adapter.itemIsChecked(position)
+        }
+        return false
+    }
+    set(value) {
+        if (adapter is SimpleCheckedAdapter) {
+            adapter.setChecked(position, value)
+        }
+    }
 
 data class CheckedInfo(
     val position: Int,
@@ -173,6 +190,7 @@ open class DslClickBuilderImpl<T : DifferData>(
 }
 
 class DslCheckedBuilderImpl<T : DifferData>(
+    private val adapter: SimpleCheckedAdapter,
     private val isClickChecked: Boolean,
     holder: SimpleHolder<T>,
     clickEventStore: ClickEventStore
@@ -198,6 +216,10 @@ class DslCheckedBuilderImpl<T : DifferData>(
 
     override fun onChecked(onChecked: OnItemChecked) {
         onCheckedCallback = onChecked
+    }
+
+    override fun setChecked(position: Int, isChecked: Boolean) {
+        adapter.setChecked(position, isChecked)
     }
 }
 
@@ -298,7 +320,12 @@ class DslSimpleCheckedAdapterImpl(val recyclerView: RecyclerView) : DslSimpleChe
         isFloatItem: Boolean,
         dsl: (@ClickDsl DslCheckedBuilder<T>.() -> Unit)?
     ) {
-        val clickBuilder = DslCheckedBuilderImpl(isClickChecked, holder, clickEventStore)
+        val clickBuilder = DslCheckedBuilderImpl(
+            adapter,
+            isClickChecked,
+            holder,
+            clickEventStore
+        )
         if (dsl != null) {
             clickBuilder.dsl()
         }
