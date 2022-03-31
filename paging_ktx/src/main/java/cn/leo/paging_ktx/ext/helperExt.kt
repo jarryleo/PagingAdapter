@@ -14,6 +14,7 @@ import cn.leo.paging_ktx.simple.SimpleCheckedAdapter
 /**
  * 当前条目是否是单选模式
  */
+@Suppress("UNUSED")
 fun ItemHelper.isSingleCheckedModel(): Boolean {
     if (adapter !is SimpleCheckedAdapter) return false
     return (adapter as? SimpleCheckedAdapter)?.isSingleCheckedModel() ?: false
@@ -22,6 +23,7 @@ fun ItemHelper.isSingleCheckedModel(): Boolean {
 /**
  * 当前条目是否是多选模式
  */
+@Suppress("UNUSED")
 fun ItemHelper.isMultiCheckedModel(): Boolean {
     if (adapter !is SimpleCheckedAdapter) return false
     return (adapter as? SimpleCheckedAdapter)?.isMultiCheckedModel() ?: false
@@ -30,6 +32,7 @@ fun ItemHelper.isMultiCheckedModel(): Boolean {
 /**
  * 当前条目是否选中
  */
+@Suppress("UNUSED")
 fun ItemHelper.isChecked(): Boolean {
     if (adapter !is SimpleCheckedAdapter) return false
     return (adapter as? SimpleCheckedAdapter)?.itemIsChecked(position) ?: false

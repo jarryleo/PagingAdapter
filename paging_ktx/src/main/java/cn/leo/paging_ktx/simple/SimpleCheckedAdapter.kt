@@ -11,6 +11,7 @@ import cn.leo.paging_ktx.adapter.CheckedData
  * 需要解决分页加载 和全选冲突问题
  *
  */
+@Suppress("UNUSED")
 open class SimpleCheckedAdapter : SimplePagingAdapter() {
     enum class CheckedModel {
         NONE, SINGLE, MULTI  //选择模式，无，单选/多选
@@ -204,7 +205,7 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
     /**
      * 返回可选择条目总数
      */
-    protected fun canCheckedItemCount(): Int {
+    private fun canCheckedItemCount(): Int {
         return snapshot().count { it is CheckedData }
     }
 
