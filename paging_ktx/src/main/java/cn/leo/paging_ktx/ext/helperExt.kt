@@ -15,22 +15,22 @@ import cn.leo.paging_ktx.simple.SimpleCheckedAdapter
  * 当前条目是否是单选模式
  */
 fun ItemHelper.isSingleCheckedModel(): Boolean {
-    if (adapter !is SimpleCheckedAdapter<*>) return false
-    return (adapter as? SimpleCheckedAdapter<*>)?.isSingleCheckedModel() ?: false
+    if (adapter !is SimpleCheckedAdapter) return false
+    return (adapter as? SimpleCheckedAdapter)?.isSingleCheckedModel() ?: false
 }
 
 /**
  * 当前条目是否是多选模式
  */
 fun ItemHelper.isMultiCheckedModel(): Boolean {
-    if (adapter !is SimpleCheckedAdapter<*>) return false
-    return (adapter as? SimpleCheckedAdapter<*>)?.isMultiCheckedModel() ?: false
+    if (adapter !is SimpleCheckedAdapter) return false
+    return (adapter as? SimpleCheckedAdapter)?.isMultiCheckedModel() ?: false
 }
 
 /**
  * 当前条目是否选中
  */
 fun ItemHelper.isChecked(): Boolean {
-    if (adapter !is SimpleCheckedAdapter<*>) return false
-    return (adapter as? SimpleCheckedAdapter<*>)?.itemIsChecked(position) ?: false
+    if (adapter !is SimpleCheckedAdapter) return false
+    return (adapter as? SimpleCheckedAdapter)?.itemIsChecked(position) ?: false
 }

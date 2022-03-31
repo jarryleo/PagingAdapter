@@ -12,7 +12,7 @@ import cn.leo.paging_adapter.holder.NewsHolder
 import cn.leo.paging_adapter.holder.PlaceHolder
 import cn.leo.paging_adapter.holder.TitleHolder
 import cn.leo.paging_adapter.model.NewsViewModel
-import cn.leo.paging_ktx.ext.buildAdapter
+import cn.leo.paging_ktx.ext.buildCheckedAdapter
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.adapter = binding.rvNews.buildAdapter {
+        binding.adapter = binding.rvNews.buildCheckedAdapter {
             addHolder(NewsHolder()) {
                 onItemClick {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it.data.url)))
@@ -30,9 +30,9 @@ class MainActivity : AppCompatActivity() {
                     toast(it.data.title)
                 }
             }
-            addHolder(TitleHolder(), true) {
-                onItemClick {
-                    toast(it.data.title)
+            addHolder(TitleHolder()) {
+                onChecked {
+                    toast("${it.position} = ${it.isChecked} ${it.checkedCount}/${it.allCanCheckedCount}")
                 }
             }
             addHolder(PlaceHolder())

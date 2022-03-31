@@ -41,8 +41,9 @@ interface DslSimpleCheckedAdapterBuilder : DslAdapterBuilder {
     fun getAdapter(): SimpleCheckedAdapter
     fun <T : DifferData> addHolder(
         holder: SimpleHolder<T>,
+        isClickChecked: Boolean = true,
         isFloatItem: Boolean = false,
-        dsl: (@ClickDsl DslClickBuilder<T>.() -> Unit)? = null
+        dsl: (@ClickDsl DslCheckedBuilder<T>.() -> Unit)? = null
     )
 }
 
@@ -53,6 +54,10 @@ interface DslClickBuilder<T : DifferData> {
     fun onItemChildLongClick(@IdRes viewId: Int, onClick: OnItemClick<T>)
 }
 
+interface DslCheckedBuilder<T : DifferData> : DslClickBuilder<T> {
+    fun onChecked(onChecked: OnItemChecked)
+}
+
 data class ItemInfo<T : DifferData>(
     val data: T,
     val position: Int,
@@ -61,16 +66,30 @@ data class ItemInfo<T : DifferData>(
     val recyclerView: RecyclerView,
 )
 
+data class CheckedInfo(
+    val position: Int,
+    val isChecked: Boolean,
+    val isAllChecked: Boolean,
+    val checkedCount: Int,
+    val allCanCheckedCount: Int,
+    val adapter: SimplePagingAdapter,
+    val recyclerView: RecyclerView,
+)
+
 fun interface OnItemClick<T : DifferData> {
     fun onClick(itemInfo: ItemInfo<T>)
 }
 
+fun interface OnItemChecked {
+    fun onChecked(checkedInfo: CheckedInfo)
+}
+
 @Suppress("UNCHECKED_CAST")
-class DslClickBuilderImpl<T : DifferData>(
+open class DslClickBuilderImpl<T : DifferData>(
     private val holder: SimpleHolder<T>,
     clickEventStore: ClickEventStore
 ) : DslClickBuilder<T> {
-    private val clazz = holder.getDataClassType()
+    protected val clazz = holder.getDataClassType()
 
     private var onItemClickListener: OnItemClick<T>? = null
     private var onItemLongClickListener: OnItemClick<T>? = null
@@ -81,7 +100,7 @@ class DslClickBuilderImpl<T : DifferData>(
         clickEventStore.clickEventList.add(this)
     }
 
-    fun doItemClick(
+    open fun doItemClick(
         position: Int,
         v: View,
         adapter: SimplePagingAdapter,
@@ -151,6 +170,35 @@ class DslClickBuilderImpl<T : DifferData>(
         onItemChildLongClickListener[viewId] = onClick
     }
 
+}
+
+class DslCheckedBuilderImpl<T : DifferData>(
+    private val isClickChecked: Boolean,
+    holder: SimpleHolder<T>,
+    clickEventStore: ClickEventStore
+) : DslClickBuilderImpl<T>(holder, clickEventStore), DslCheckedBuilder<T> {
+
+    internal var onCheckedCallback: OnItemChecked? = null
+
+    override fun doItemClick(
+        position: Int,
+        v: View,
+        adapter: SimplePagingAdapter,
+        recyclerView: RecyclerView
+    ) {
+        super.doItemClick(position, v, adapter, recyclerView)
+        if (!isClickChecked) return
+        val item = adapter.getData(position)
+        if (item != null && item::class.java == clazz) {
+            if (adapter is SimpleCheckedAdapter) {
+                adapter.setChecked(position, !adapter.itemIsChecked(position))
+            }
+        }
+    }
+
+    override fun onChecked(onChecked: OnItemChecked) {
+        onCheckedCallback = onChecked
+    }
 }
 
 class ClickEventStore(val recyclerView: RecyclerView, val adapter: SimplePagingAdapter) {
@@ -223,21 +271,43 @@ class DslSimpleCheckedAdapterImpl(val recyclerView: RecyclerView) : DslSimpleChe
 
     private val clickEventStore = ClickEventStore(recyclerView, adapter)
 
+    private val checkedEventList = mutableListOf<OnItemChecked>()
+
+    init {
+        adapter.setOnCheckedCallback { position, isChecked,
+                                       isAllChecked, checkedCount,
+                                       allCanCheckedCount ->
+            val checkedInfo = CheckedInfo(
+                position, isChecked, isAllChecked,
+                checkedCount, allCanCheckedCount,
+                adapter, recyclerView
+            )
+            checkedEventList.forEach {
+                it.onChecked(checkedInfo)
+            }
+        }
+    }
+
     override fun getAdapter(): SimpleCheckedAdapter {
         return adapter
     }
 
     override fun <T : DifferData> addHolder(
         holder: SimpleHolder<T>,
+        isClickChecked: Boolean,
         isFloatItem: Boolean,
-        dsl: (@ClickDsl DslClickBuilder<T>.() -> Unit)?
+        dsl: (@ClickDsl DslCheckedBuilder<T>.() -> Unit)?
     ) {
-        val clickBuilder = DslClickBuilderImpl(holder, clickEventStore)
+        val clickBuilder = DslCheckedBuilderImpl(isClickChecked, holder, clickEventStore)
         if (dsl != null) {
             clickBuilder.dsl()
         }
         if (isFloatItem) {
             recyclerView.addItemDecoration(FloatDecoration(holder.getItemLayout()))
+        }
+        val onCheckedCallback = clickBuilder.onCheckedCallback
+        if (onCheckedCallback != null) {
+            checkedEventList.add(onCheckedCallback)
         }
         adapter.addHolder(holder)
     }

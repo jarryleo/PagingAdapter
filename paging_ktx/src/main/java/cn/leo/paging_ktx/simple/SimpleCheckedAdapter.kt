@@ -1,6 +1,7 @@
 package cn.leo.paging_ktx.simple
 
 import androidx.annotation.IntRange
+import cn.leo.paging_ktx.adapter.CheckedData
 
 /**
  * @author : ling luo
@@ -15,7 +16,7 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
         NONE, SINGLE, MULTI  //选择模式，无，单选/多选
     }
 
-    private var checkedModel = CheckedModel.NONE  //当前选择模式
+    private var checkedModel = CheckedModel.MULTI  //当前选择模式
 
     private var singleCheckIndex = -1 //单选索引
 
@@ -23,12 +24,34 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
 
     private var maxCheckedNum = Int.MAX_VALUE  //多选限制，最多选择多少个
 
+    private var onCheckedCallback: OnCheckedCallback? = null //多选回调
+
+    fun interface OnCheckedCallback {
+        fun onChecked(
+            position: Int,
+            isChecked: Boolean,
+            isAllChecked: Boolean,
+            checkedCount: Int, //分页加载会变化
+            allCanCheckedCount: Int //分页加载会变化
+        )
+    }
+
+    /**
+     * 设置选择回调
+     */
+    fun setOnCheckedCallback(callback: OnCheckedCallback) {
+        onCheckedCallback = callback
+    }
 
     /**
      * 更新所有条目
      */
     private fun notifyAllItem() {
-        notifyItemRangeChanged(0, itemCount - 1)
+        notifyItemRangeChanged(
+            0,
+            itemCount - 1,
+            checkedModel
+        )
     }
 
     /**
@@ -90,7 +113,10 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      */
     open fun reverseChecked() {
         if (checkedModel != CheckedModel.MULTI) return
-        val all = (0 until itemCount).toMutableSet()
+        //获取所有是CheckedData的数据
+        val all = (0 until itemCount).filter {
+            getData(it) is CheckedData
+        }.toMutableSet()
         all.removeAll(multiCheckIndexList)
         multiCheckIndexList = all
         notifyAllItem()
@@ -101,7 +127,9 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      */
     open fun checkedAll() {
         if (checkedModel != CheckedModel.MULTI) return
-        multiCheckIndexList = (0 until itemCount).toMutableSet()
+        multiCheckIndexList = (0 until itemCount).filter {
+            getData(it) is CheckedData
+        }.toMutableSet()
         notifyAllItem()
     }
 
@@ -118,39 +146,69 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      * 设置条目选择状态
      * @param position 条目索引
      * @param isChecked 是否选择
-     *
+     * @return 是否改变状态
      */
-    open fun setChecked(position: Int, isChecked: Boolean) {
+    open fun setChecked(position: Int, isChecked: Boolean): Boolean {
+        //非可选择条目，不可选择
+        if (getData(position) !is CheckedData) return false
         when (checkedModel) {
             CheckedModel.SINGLE -> {
-                singleCheckIndex = if (isChecked) {
-                    position
-                } else {
-                    -1
-                }
+                if (singleCheckIndex == position && isChecked) return false
+                singleCheckIndex = if (isChecked) position else -1
+                return true
             }
             CheckedModel.MULTI -> {
+                val contains = multiCheckIndexList.contains(position)
+                if (contains == isChecked) return false
                 if (isChecked) {
-                    if (multiCheckIndexList.size < maxCheckedNum) {
+                    return if (multiCheckIndexList.size < maxCheckedNum) {
                         multiCheckIndexList.add(position)
+                        notifyItemChanged(position, isChecked)
+                        onCheckedCallback?.onChecked(
+                            position,
+                            isChecked,
+                            isAllChecked(),
+                            multiCheckIndexList.size,
+                            canCheckedItemCount()
+                        )
+                        true
                     } else {
-                        //通知超过最大选择数 todo
+                        //超过最大选择数
+                        false
                     }
                 } else {
                     multiCheckIndexList.remove(position)
+                    notifyItemChanged(position, isChecked)
+                    onCheckedCallback?.onChecked(
+                        position,
+                        isChecked,
+                        isAllChecked(),
+                        multiCheckIndexList.size,
+                        canCheckedItemCount()
+                    )
+                    return true
                 }
-
             }
-            else -> {}
+            else -> {
+                return false
+            }
         }
     }
 
     /**
-     * 判断是否全选，实际要根据holder性质和分页加载数量判断
+     * 判断是否全选
      */
     open fun isAllChecked(): Boolean {
-        return multiCheckIndexList.size == itemCount
+        return multiCheckIndexList.size == canCheckedItemCount()
     }
+
+    /**
+     * 返回可选择条目总数
+     */
+    protected fun canCheckedItemCount(): Int {
+        return snapshot().count { it is CheckedData }
+    }
+
 
     /**
      * 判断条目是否被选中
