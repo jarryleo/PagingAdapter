@@ -107,7 +107,6 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
         }
     }
 
-
     /**
      * 反选
      */
@@ -220,4 +219,12 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
             CheckedModel.NONE -> false
         }
     }
+
+    /**
+     * 获取所有已选择的索引
+     */
+    open fun getCheckedPositionList(): List<Int> {
+        return multiCheckIndexList.toList()
+    }
+
 }
