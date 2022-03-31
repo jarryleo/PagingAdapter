@@ -231,7 +231,11 @@ class DslCheckedBuilderImpl<T : DifferData>(
 
 class ClickEventStore(val recyclerView: RecyclerView, val adapter: SimplePagingAdapter) {
 
-    val clickEventList = mutableListOf<DslClickBuilderImpl<*>>()
+    private val clickEventList = mutableListOf<DslClickBuilderImpl<*>>()
+
+    fun addClickEvent(clickBuilder: DslClickBuilderImpl<*>) {
+        clickEventList.add(clickBuilder)
+    }
 
     init {
         adapter.setOnItemClickListener { _, v, position ->
@@ -274,7 +278,7 @@ class DslSimpleAdapterImpl(val recyclerView: RecyclerView) : DslSimpleAdapterBui
         dsl: (@ClickDsl DslClickBuilder<T>.() -> Unit)?
     ) {
         val clickBuilder = DslClickBuilderImpl(holder)
-        clickEventStore.clickEventList.add(clickBuilder)
+        clickEventStore.addClickEvent(clickBuilder)
         if (dsl != null) {
             clickBuilder.dsl()
         }
@@ -332,7 +336,7 @@ class DslSimpleCheckedAdapterImpl(val recyclerView: RecyclerView) : DslSimpleChe
             isClickChecked,
             holder
         )
-        clickEventStore.clickEventList.add(clickBuilder)
+        clickEventStore.addClickEvent(clickBuilder)
         if (dsl != null) {
             clickBuilder.dsl()
         }
