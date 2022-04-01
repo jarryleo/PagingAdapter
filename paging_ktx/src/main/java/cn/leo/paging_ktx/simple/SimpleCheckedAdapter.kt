@@ -114,12 +114,17 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
     open fun reverseChecked() {
         if (checkedModel != CheckedModel.MULTI) return
         //获取所有是CheckedData的数据
-        val all = (0 until itemCount).filter {
+        val left = (0 until itemCount).filter {
             getData(it) is CheckedData
         }.toMutableSet()
-        all.removeAll(multiCheckIndexList)
-        multiCheckIndexList = all
-        notifyAllItem()
+        left.removeAll(multiCheckIndexList)
+        val copy = multiCheckIndexList.toMutableSet()
+        copy.forEach {
+            setChecked(it, false)
+        }
+        left.forEach {
+            setChecked(it, true)
+        }
     }
 
     /**
@@ -127,10 +132,13 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      */
     open fun checkedAll() {
         if (checkedModel != CheckedModel.MULTI) return
-        multiCheckIndexList = (0 until itemCount).filter {
+        val all = (0 until itemCount).filter {
             getData(it) is CheckedData
         }.toMutableSet()
-        notifyAllItem()
+        //排除已选中的条目，剩余全部设置选中
+        val left = all.toMutableSet()
+        left.removeAll(multiCheckIndexList)
+        left.forEach { setChecked(it, true) }
     }
 
     /**
@@ -138,8 +146,10 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      */
     open fun cancelChecked() {
         singleCheckIndex = -1
-        multiCheckIndexList = mutableSetOf()
-        notifyAllItem()
+        val copy = multiCheckIndexList.toMutableSet()
+        copy.forEach {
+            setChecked(it, false)
+        }
     }
 
     /**

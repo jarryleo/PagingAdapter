@@ -1,10 +1,12 @@
 package cn.leo.paging_adapter.holder
 
+import android.widget.CheckBox
 import cn.leo.paging_adapter.R
 import cn.leo.paging_adapter.bean.TitleBean
-import cn.leo.paging_adapter.databinding.ItemTitleBinding
+import cn.leo.paging_adapter.databinding.ItemCheckedBinding
 import cn.leo.paging_adapter.ext.binding
 import cn.leo.paging_ktx.adapter.ItemHelper
+import cn.leo.paging_ktx.ext.isChecked
 import cn.leo.paging_ktx.simple.SimpleHolder
 
 /**
@@ -12,9 +14,13 @@ import cn.leo.paging_ktx.simple.SimpleHolder
  * @date : 2020/11/10
  * @description : 标题holder
  */
-class TitleHolder : SimpleHolder<TitleBean>(R.layout.item_title) {
+class CheckedHolder : SimpleHolder<TitleBean>(R.layout.item_checked) {
     override fun bindItem(item: ItemHelper, data: TitleBean, payloads: MutableList<Any>?) {
-        item.binding<ItemTitleBinding>()?.let {
+        item.getViewById<CheckBox>(R.id.cb_title) {
+            it.isChecked = item.isChecked()
+        }
+        if (!payloads.isNullOrEmpty()) return
+        item.binding<ItemCheckedBinding>()?.let {
             it.data = data
             it.executePendingBindings() //悬浮条目，需要这句，否则悬浮条目无数据
         }

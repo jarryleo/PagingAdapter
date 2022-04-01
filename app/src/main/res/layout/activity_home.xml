@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="adapter"
+            type="cn.leo.paging_ktx.simple.SimplePagingAdapter" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            tools:context=".activity.HomeActivity">
+
+            <com.scwang.smart.refresh.layout.SmartRefreshLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:bindState="@{adapter}">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_checked"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    tools:listitem="@layout/item_checked" />
+
+            </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_jump"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_jump" />
+
+            <Button
+                android:id="@+id/btn_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/checked_all" />
+
+            <Button
+                android:id="@+id/btn_reverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/checked_reverse" />
+        </LinearLayout>
+    </LinearLayout>
+
+</layout>

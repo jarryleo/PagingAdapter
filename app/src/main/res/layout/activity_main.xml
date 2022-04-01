@@ -15,7 +15,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".activity.MainActivity">
 
         <com.scwang.smart.refresh.layout.SmartRefreshLayout
             android:layout_width="match_parent"
