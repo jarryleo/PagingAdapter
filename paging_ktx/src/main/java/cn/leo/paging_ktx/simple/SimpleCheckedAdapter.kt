@@ -114,9 +114,10 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
     open fun reverseChecked() {
         if (checkedModel != CheckedModel.MULTI) return
         //获取所有是CheckedData的数据
-        val left = (0 until itemCount).filter {
-            getData(it) is CheckedData
-        }.toMutableSet()
+        val left = (0 until itemCount)
+            .asSequence()
+            .filter { getData(it) is CheckedData }
+            .toMutableSet()
         left.removeAll(multiCheckIndexList)
         val copy = multiCheckIndexList.toMutableSet()
         copy.forEach {
