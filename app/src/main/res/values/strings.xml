@@ -6,5 +6,6 @@
     <string name="click_retry">点击重试</string>
     <string name="btn_jump">知乎日报</string>
     <string name="checked_all">全选</string>
+    <string name="checked_clear">清空</string>
     <string name="checked_reverse">反选</string>
 </resources>
