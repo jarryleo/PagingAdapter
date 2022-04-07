@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(it.data.url)))
                 }
             }
-            addHolder(TitleHolder())
+            addHolder(TitleHolder(), isFloatItem = true)
             addHolder(PlaceHolder())
             setPager(model.pager)
         }
