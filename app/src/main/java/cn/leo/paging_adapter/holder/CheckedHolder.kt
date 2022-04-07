@@ -17,7 +17,7 @@ class CheckedHolder : SimpleHolder<TitleBean>(R.layout.item_checked) {
     override fun bindItem(item: ItemHelper, data: TitleBean, payloads: MutableList<Any>?) {
         item.binding<ItemCheckedBinding>()?.let {
             if (payloads.isNullOrEmpty()) it.data = data
-            else it.cbTitle.isChecked = item.isChecked()
+            it.cbTitle.isChecked = item.isChecked()
         }
     }
 }
