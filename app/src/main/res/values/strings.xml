@@ -8,4 +8,6 @@
     <string name="checked_all">全选</string>
     <string name="checked_clear">清空</string>
     <string name="checked_reverse">反选</string>
+    <string name="open_check_mode">开启选择模式</string>
+    <string name="close_check_mode">关闭选择模式</string>
 </resources>

@@ -19,22 +19,42 @@ import cn.leo.paging_ktx.simple.SimplePager
  */
 class HomeViewModel : ViewModel() {
 
-    val pager = SimplePager<Long, DifferData>(viewModelScope) {
-        val list = (0..10).map { TitleBean("测试$it") }
-        PagingSource.LoadResult.Page(list, null, null)
+    val pager = SimplePager<Long, DifferData>(viewModelScope) { param ->
+        val key = param.key ?: 0L
+        val list = (0..9)
+            .map { it + key * 10 }
+            .map { TitleBean("测试$it") }
+        val nextKey = if (key > 3) {
+            null
+        } else {
+            key + 1
+        }
+        PagingSource.LoadResult.Page(list, null, nextKey)
     }
 
     var state = State()
     var event = Event()
 
     class State(
-        val isCheckedAll: ObservableBoolean = ObservableBoolean(false)
+        val isCheckedAll: ObservableBoolean = ObservableBoolean(false),
+
+        val isCheckedMode: ObservableBoolean = ObservableBoolean(false)
     )
 
-    class Event {
+    inner class Event {
 
         fun jump(v: View) {
             v.context.startActivity(Intent(v.context, MainActivity::class.java))
+        }
+
+        fun switchMode(adapter: SimpleCheckedAdapter) {
+            if (adapter.isMultiCheckedModel()) {
+                adapter.closeCheckModel()
+                state.isCheckedMode.set(false)
+            } else {
+                adapter.setMultiCheckModel()
+                state.isCheckedMode.set(true)
+            }
         }
 
         fun checkedAll(adapter: SimpleCheckedAdapter) {
@@ -48,5 +68,6 @@ class HomeViewModel : ViewModel() {
         fun reverse(adapter: SimpleCheckedAdapter) {
             adapter.reverseChecked()
         }
+
     }
 }

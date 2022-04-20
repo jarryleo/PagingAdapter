@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -29,12 +30,19 @@
             android:layout_weight="1"
             tools:context=".activity.HomeActivity">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_checked"
+            <com.scwang.smart.refresh.layout.SmartRefreshLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:overScrollMode="never"
-                tools:listitem="@layout/item_checked" />
+                app:bindState="@{adapter}">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_checked"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    tools:listitem="@layout/item_checked" />
+
+            </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
         </FrameLayout>
 
@@ -50,6 +58,14 @@
                 android:text="@string/btn_jump" />
 
             <Button
+                android:id="@+id/btn_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{()->event.switchMode(adapter)}"
+                android:text="@{state.isCheckedMode() ? @string/close_check_mode : @string/open_check_mode}"
+                tools:text="@string/open_check_mode" />
+
+            <Button
                 android:id="@+id/btn_all"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,6 +79,8 @@
                 android:layout_height="wrap_content"
                 android:onClick="@{()->event.reverse(adapter)}"
                 android:text="@string/checked_reverse" />
+
+
         </LinearLayout>
     </LinearLayout>
 

@@ -20,6 +20,7 @@ class HomeActivity : AppCompatActivity() {
         binding.state = model.state
         binding.event = model.event
         binding.adapter = binding.rvChecked.buildCheckedAdapter {
+            getAdapter().closeCheckModel()
             addHolder(CheckedHolder()) {
                 onChecked {
                     model.state.isCheckedAll.set(it.isAllChecked)
