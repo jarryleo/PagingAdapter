@@ -48,13 +48,19 @@ class HomeViewModel : ViewModel() {
         }
 
         fun switchMode(adapter: SimpleCheckedAdapter) {
-            if (adapter.isMultiCheckedModel()) {
-                adapter.closeCheckModel()
-                state.isCheckedMode.set(false)
-            } else {
-                adapter.setMultiCheckModel()
-                state.isCheckedMode.set(true)
+            when {
+                adapter.isMultiCheckedModel() -> {
+                    adapter.closeCheckModel()
+                }
+                adapter.isSingleCheckedModel() -> {
+                    adapter.closeCheckModel()
+                }
+                else -> {
+                    //adapter.setSingleCheckModel()
+                    adapter.setMultiCheckModel()
+                }
             }
+            state.isCheckedMode.set(adapter.isMultiCheckedModel() || adapter.isSingleCheckedModel())
         }
 
         fun checkedAll(adapter: SimpleCheckedAdapter) {

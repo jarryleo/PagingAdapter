@@ -8,6 +8,7 @@ import cn.leo.paging_adapter.ext.binding
 import cn.leo.paging_ktx.adapter.ItemHelper
 import cn.leo.paging_ktx.ext.isChecked
 import cn.leo.paging_ktx.ext.isMultiCheckedModel
+import cn.leo.paging_ktx.ext.isSingleCheckedModel
 import cn.leo.paging_ktx.simple.SimpleHolder
 
 /**
@@ -20,7 +21,7 @@ class CheckedHolder : SimpleHolder<TitleBean>(R.layout.item_checked) {
         item.binding<ItemCheckedBinding>()?.let {
             if (payloads.isNullOrEmpty()) it.data = data
             it.cbTitle.isChecked = item.isChecked()
-            it.cbTitle.isVisible = item.isMultiCheckedModel()
+            it.cbTitle.isVisible = item.isMultiCheckedModel() || item.isSingleCheckedModel()
         }
     }
 }

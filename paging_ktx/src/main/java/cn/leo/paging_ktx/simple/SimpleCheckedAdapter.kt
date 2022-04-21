@@ -165,7 +165,18 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
         when (checkedModel) {
             CheckedModel.SINGLE -> {
                 if (singleCheckIndex == position && isChecked) return false
+                if (singleCheckIndex != -1) {
+                    notifyItemChanged(singleCheckIndex)
+                }
                 singleCheckIndex = if (isChecked) position else -1
+                notifyItemChanged(position)
+                onCheckedCallback?.onChecked(
+                    position,
+                    isChecked,
+                    isAllChecked(),
+                    if (singleCheckIndex == -1) 0 else 1,
+                    canCheckedItemCount()
+                )
                 return true
             }
             CheckedModel.MULTI -> {
@@ -210,6 +221,9 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      * 判断是否全选
      */
     open fun isAllChecked(): Boolean {
+        if (checkedModel == CheckedModel.SINGLE) {
+            return canCheckedItemCount() == 1 && singleCheckIndex != -1
+        }
         return multiCheckIndexList.size == canCheckedItemCount()
     }
 
@@ -236,7 +250,19 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      * 获取所有已选择的索引
      */
     open fun getCheckedPositionList(): List<Int> {
+        if (isSingleCheckedModel()) {
+            return if (singleCheckIndex == -1) {
+                emptyList()
+            } else {
+                listOf(singleCheckIndex)
+            }
+        }
         return multiCheckIndexList.toList()
     }
+
+    /**
+     * 获取单选索引
+     */
+    open fun getSingleCheckedPosition() = singleCheckIndex
 
 }
