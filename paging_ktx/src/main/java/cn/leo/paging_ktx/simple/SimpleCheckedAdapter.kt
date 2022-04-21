@@ -17,9 +17,11 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
         NONE, SINGLE, MULTI  //选择模式，无，单选/多选
     }
 
-    private var checkedModel = CheckedModel.MULTI  //当前选择模式
+    private var checkedModel = CheckedModel.NONE  //当前选择模式
 
     private var singleCheckIndex = -1 //单选索引
+
+    private var singleModelCancelable = false  //单选是否可取消选择
 
     private var multiCheckIndexList: MutableSet<Int> = mutableSetOf() //多选索引
 
@@ -72,8 +74,13 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
 
     /**
      * 设置单选模式
+     * @param cancelable 是否可取消选择
      */
-    open fun setSingleCheckModel() {
+    open fun setSingleCheckModel(cancelable: Boolean = true) {
+        singleModelCancelable = cancelable
+        if (!cancelable && singleCheckIndex == -1) {
+            singleCheckIndex = 0
+        }
         setCheckModel(CheckedModel.SINGLE)
     }
 
@@ -164,6 +171,7 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
         if (getData(position) !is CheckedData) return false
         when (checkedModel) {
             CheckedModel.SINGLE -> {
+                if (!singleModelCancelable && !isChecked) return false
                 if (singleCheckIndex == position && isChecked) return false
                 if (singleCheckIndex != -1) {
                     notifyItemChanged(singleCheckIndex)

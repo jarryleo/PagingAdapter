@@ -56,8 +56,8 @@ class HomeViewModel : ViewModel() {
                     adapter.closeCheckModel()
                 }
                 else -> {
-                    //adapter.setSingleCheckModel()
-                    adapter.setMultiCheckModel()
+                    adapter.setSingleCheckModel(false)
+                    //adapter.setMultiCheckModel()
                 }
             }
             state.isCheckedMode.set(adapter.isMultiCheckedModel() || adapter.isSingleCheckedModel())
