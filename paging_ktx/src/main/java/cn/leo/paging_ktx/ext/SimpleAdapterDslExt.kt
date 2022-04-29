@@ -29,7 +29,7 @@ interface DslAdapterBuilder {
 }
 
 interface DslSimpleAdapterBuilder : DslAdapterBuilder {
-    fun getAdapter(): SimplePagingAdapter
+    val adapter: SimplePagingAdapter
     fun <T : DifferData> addHolder(
         holder: SimpleHolder<T>,
         isFloatItem: Boolean = false,
@@ -38,7 +38,7 @@ interface DslSimpleAdapterBuilder : DslAdapterBuilder {
 }
 
 interface DslSimpleCheckedAdapterBuilder : DslAdapterBuilder {
-    fun getAdapter(): SimpleCheckedAdapter
+    val adapter: SimpleCheckedAdapter
     fun <T : DifferData> addHolder(
         holder: SimpleHolder<T>,
         isClickChecked: Boolean = true,
@@ -55,8 +55,8 @@ interface DslClickBuilder<T : DifferData> {
 }
 
 interface DslCheckedBuilder<T : DifferData> : DslClickBuilder<T> {
-    fun onChecked(onChecked: OnItemChecked)
-    fun setChecked(position: Int, isChecked: Boolean)
+    fun onItemChecked(onChecked: OnItemChecked)
+    fun setChecked(position: Int, isChecked: Boolean): Boolean
     fun getCheckedPositionList(): List<Int>
     fun getCheckedItemList(): List<T>
 }
@@ -210,12 +210,12 @@ class DslCheckedBuilderImpl<T : DifferData>(
         }
     }
 
-    override fun onChecked(onChecked: OnItemChecked) {
+    override fun onItemChecked(onChecked: OnItemChecked) {
         onCheckedCallback = onChecked
     }
 
-    override fun setChecked(position: Int, isChecked: Boolean) {
-        adapter.setChecked(position, isChecked)
+    override fun setChecked(position: Int, isChecked: Boolean): Boolean {
+        return adapter.setChecked(position, isChecked)
     }
 
     override fun getCheckedPositionList(): List<Int> {
@@ -262,15 +262,14 @@ class ClickEventStore(val recyclerView: RecyclerView, val adapter: SimplePagingA
 }
 
 class DslSimpleAdapterImpl(val recyclerView: RecyclerView) : DslSimpleAdapterBuilder {
-    internal val adapter = SimplePagingAdapter()
+    private val simplePagingAdapter = SimplePagingAdapter()
     internal var mLayoutManager: RecyclerView.LayoutManager =
         LinearLayoutManager(recyclerView.context)
 
     private val clickEventStore = ClickEventStore(recyclerView, adapter)
 
-    override fun getAdapter(): SimplePagingAdapter {
-        return adapter
-    }
+    override val adapter: SimplePagingAdapter
+        get() = simplePagingAdapter
 
     override fun <T : DifferData> addHolder(
         holder: SimpleHolder<T>,
@@ -298,13 +297,16 @@ class DslSimpleAdapterImpl(val recyclerView: RecyclerView) : DslSimpleAdapterBui
 }
 
 class DslSimpleCheckedAdapterImpl(val recyclerView: RecyclerView) : DslSimpleCheckedAdapterBuilder {
-    internal val adapter = SimpleCheckedAdapter()
+    private val simpleCheckedAdapter = SimpleCheckedAdapter()
     internal var mLayoutManager: RecyclerView.LayoutManager =
         LinearLayoutManager(recyclerView.context)
 
     private val clickEventStore = ClickEventStore(recyclerView, adapter)
 
     private val checkedEventList = mutableListOf<OnItemChecked>()
+
+    override val adapter: SimpleCheckedAdapter
+        get() = simpleCheckedAdapter
 
     init {
         adapter.setOnCheckedCallback { position, isChecked,
@@ -321,9 +323,6 @@ class DslSimpleCheckedAdapterImpl(val recyclerView: RecyclerView) : DslSimpleChe
         }
     }
 
-    override fun getAdapter(): SimpleCheckedAdapter {
-        return adapter
-    }
 
     override fun <T : DifferData> addHolder(
         holder: SimpleHolder<T>,

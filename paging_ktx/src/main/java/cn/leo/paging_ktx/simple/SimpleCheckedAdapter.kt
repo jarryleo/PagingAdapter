@@ -29,6 +29,8 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
 
     private var onCheckedCallback: OnCheckedCallback? = null //多选回调
 
+    private var onMaxSelectCallback: OnMaxSelectCallback? = null //超过最多选择回调
+
     fun interface OnCheckedCallback {
         fun onChecked(
             position: Int,
@@ -37,6 +39,13 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
             checkedCount: Int, //分页加载会变化
             allCanCheckedCount: Int //分页加载会变化
         )
+    }
+
+    /**
+     * 超过最多选择
+     */
+    fun interface OnMaxSelectCallback {
+        fun onSelectOverMax(max: Int)
     }
 
     /**
@@ -107,9 +116,15 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
 
     /**
      * 设置最大选择数
+     * @param max 最大选择数
+     * @param onMaxSelectCallback 超过最大选择回调
      */
-    open fun setMaxChecked(@IntRange(from = 0L) max: Int) {
-        maxCheckedNum = max
+    open fun setMaxChecked(
+        @IntRange(from = 0L) max: Int,
+        onMaxSelectCallback: OnMaxSelectCallback? = null
+    ) {
+        this.maxCheckedNum = max
+        this.onMaxSelectCallback = onMaxSelectCallback
         if (multiCheckIndexList.size > max) {
             cancelChecked()
         }
@@ -130,8 +145,10 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
         copy.forEach {
             setChecked(it, false)
         }
-        left.forEach {
-            setChecked(it, true)
+        for (i in left) {
+            if (!setChecked(i, true)) {
+                return
+            }
         }
     }
 
@@ -146,7 +163,11 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
         //排除已选中的条目，剩余全部设置选中
         val left = all.toMutableSet()
         left.removeAll(multiCheckIndexList)
-        left.forEach { setChecked(it, true) }
+        for (i in left) {
+            if (!setChecked(i, true)) {
+                return
+            }
+        }
     }
 
     /**
@@ -204,6 +225,7 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
                         true
                     } else {
                         //超过最大选择数
+                        onMaxSelectCallback?.onSelectOverMax(maxCheckedNum)
                         false
                     }
                 } else {
@@ -266,6 +288,13 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
             }
         }
         return multiCheckIndexList.toList()
+    }
+
+    /**
+     * 获取已选择数量
+     */
+    open fun getCheckedCount(): Int {
+        return getCheckedPositionList().size
     }
 
     /**
