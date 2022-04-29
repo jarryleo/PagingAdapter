@@ -23,7 +23,7 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
     constructor(diffCallback: DiffUtil.ItemCallback<T>) : super(diffCallback)
 
     companion object {
-        fun <T> itemCallback(
+        fun <T : Any> itemCallback(
             areItemsTheSame: (T, T) -> Boolean = { o, n -> o == n },
             areContentsTheSame: (T, T) -> Boolean = { o, n -> o == n },
             getChangePayload: (T, T) -> Any? = { _, _ -> null }
@@ -117,7 +117,7 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
     }
 
     /**
-     * 向尾部添加数据
+     * 向尾部添加数据 (只能添加一条)
      */
     fun appendItem(item: T) {
         if (!this::mPagingData.isInitialized || !this::mScope.isInitialized) {
@@ -128,7 +128,7 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
     }
 
     /**
-     * 向首部添加数据
+     * 向首部添加数据 (只能添加一条)
      */
     fun prependItem(item: T) {
         if (!this::mPagingData.isInitialized || !this::mScope.isInitialized) {
@@ -154,7 +154,7 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
      * 移除数据
      * @param item 要移除的条目
      */
-    fun removeItem(item: T) {
+    open fun removeItem(item: T) {
         filterItem { it != item }
     }
 
@@ -162,7 +162,7 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
      * 移除数据
      * @param position 要移除的条目的索引
      */
-    fun removeItem(position: Int) {
+    open fun removeItem(position: Int) {
         filterItem { it != getData(position) }
     }
 
@@ -336,17 +336,14 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
         addLoadStateListener {
             dispatchState(
                 it.refresh,
-                it.source.append.endOfPaginationReached,
                 mOnRefreshStateListenerArray
             )
             dispatchState(
                 it.append,
-                it.source.append.endOfPaginationReached,
                 mOnLoadMoreStateListenerArray
             )
             dispatchState(
                 it.prepend,
-                it.source.append.endOfPaginationReached,
                 mOnPrependStateListenerArray
             )
         }
@@ -354,7 +351,6 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
 
     private fun dispatchState(
         loadState: LoadState,
-        noMoreData: Boolean,
         stateListener: ArrayList<(State) -> Unit>
     ) {
         when (loadState) {
@@ -362,7 +358,7 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
                 observer(State.Loading, stateListener)
             }
             is LoadState.NotLoading -> {
-                observer(State.Success(noMoreData), stateListener)
+                observer(State.Success(loadState.endOfPaginationReached), stateListener)
             }
             is LoadState.Error -> {
                 observer(State.Error, stateListener)

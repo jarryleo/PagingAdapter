@@ -9,7 +9,7 @@
 
         <variable
             name="data"
-            type="cn.leo.paging_adapter.bean.TitleBean" />
+            type="cn.leo.paging_adapter.db.RepoEntity" />
 
     </data>
 
@@ -22,10 +22,10 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:text="@{data.title}"
+            android:text="@{data.name}"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -36,7 +36,7 @@
             android:id="@+id/cb_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
             android:clickable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"

@@ -1,5 +1,6 @@
 package cn.leo.paging_adapter.binding
 
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -96,7 +97,7 @@ fun bindingState(smartRefreshLayout: SmartRefreshLayout, adapter: SimplePagingAd
             is State.Loading -> {
                 //如果是手动下拉刷新，则不展示loading页
                 if (smartRefreshLayout.state != RefreshState.Refreshing) {
-                    statePager.showLoading()
+                    //statePager.showLoading()
                 }
                 smartRefreshLayout.resetNoMoreData()
             }
@@ -115,6 +116,7 @@ fun bindingState(smartRefreshLayout: SmartRefreshLayout, adapter: SimplePagingAd
             }
         }
     }
+    Log.e("addLoadStateListener", "addOnLoadMoreStateListener", )
     //加载更多状态
     adapter.addOnLoadMoreStateListener {
         when (it) {

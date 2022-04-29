@@ -9,27 +9,30 @@ import kotlinx.coroutines.flow.Flow
  * @date : 2020/11/10
  * @description : 简易数据分页
  */
-class SimplePager<K : Any, V : Any>(
+open class SimplePager<K : Any, V : Any>(
     private val scope: CoroutineScope,
     private val pageSize: Int = 20,
     private val initialLoadSize: Int = pageSize,
     private val prefetchDistance: Int = pageSize,
     private val maxSize: Int = PagingConfig.MAX_SIZE_UNBOUNDED,
     private val enablePlaceholders: Boolean = false,
+    private val jumpThreshold: Int = PagingSource.LoadResult.Page.COUNT_UNDEFINED,
     private val initialKey: K? = null,
     private val pagingSource: () -> PagingSource<K, V>? = { null },
+    private val refreshKey: (state: PagingState<K, V>) -> K? = { initialKey },
     private val loadData:
     suspend (PagingSource.LoadParams<K>) -> PagingSource.LoadResult<K, V>? = { null }
 ) {
 
-    fun getData(): Flow<PagingData<V>> {
+    open fun getData(): Flow<PagingData<V>> {
         return Pager(
             PagingConfig(
-                pageSize,
+                pageSize = pageSize,
                 initialLoadSize = initialLoadSize,
                 prefetchDistance = prefetchDistance,
                 maxSize = maxSize,
-                enablePlaceholders = enablePlaceholders
+                enablePlaceholders = enablePlaceholders,
+                jumpThreshold = jumpThreshold
             ),
             initialKey = initialKey
         ) {
@@ -41,7 +44,7 @@ class SimplePager<K : Any, V : Any>(
                 }
 
                 override fun getRefreshKey(state: PagingState<K, V>): K? {
-                    return initialKey
+                    return refreshKey(state)
                 }
             }
         }.flow.cachedIn(scope)

@@ -17,7 +17,7 @@ import cn.leo.paging_ktx.simple.SimpleCheckedAdapter
 @Suppress("UNUSED")
 fun ItemHelper.isSingleCheckedModel(): Boolean {
     if (adapter !is SimpleCheckedAdapter) return false
-    return (adapter as? SimpleCheckedAdapter)?.isSingleCheckedModel() ?: false
+    return (adapter as? SimpleCheckedAdapter)?.isSingleCheckedMode() ?: false
 }
 
 /**
@@ -26,7 +26,7 @@ fun ItemHelper.isSingleCheckedModel(): Boolean {
 @Suppress("UNUSED")
 fun ItemHelper.isMultiCheckedModel(): Boolean {
     if (adapter !is SimpleCheckedAdapter) return false
-    return (adapter as? SimpleCheckedAdapter)?.isMultiCheckedModel() ?: false
+    return (adapter as? SimpleCheckedAdapter)?.isMultiCheckedMode() ?: false
 }
 
 /**

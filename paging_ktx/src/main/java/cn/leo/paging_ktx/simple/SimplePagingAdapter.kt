@@ -52,15 +52,15 @@ open class SimplePagingAdapter(
         holderMap[key] = holder
     }
 
-    fun <T : DifferData> setList(scope: CoroutineScope, list: List<T>) {
+    open fun <T : DifferData> setList(scope: CoroutineScope, list: List<T>) {
         super.setPagingData(scope, PagingData.from(list))
     }
 
-    fun <T : DifferData> setData(scope: CoroutineScope, pagingData: PagingData<T>) {
+    open fun <T : DifferData> setData(scope: CoroutineScope, pagingData: PagingData<T>) {
         super.setPagingData(scope, pagingData as PagingData<DifferData>)
     }
 
-    fun <T : DifferData> setPager(pager: SimplePager<*, T>) {
+    open fun <T : DifferData> setPager(pager: SimplePager<*, T>) {
         pager.getScope().launch {
             pager.getData().collectLatest {
                 setData(this, it)
