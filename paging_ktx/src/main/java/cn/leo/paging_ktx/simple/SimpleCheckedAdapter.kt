@@ -120,7 +120,7 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      * @param onMaxSelectCallback 超过最大选择回调
      */
     open fun setMaxChecked(
-        @IntRange(from = 0L) max: Int,
+        @IntRange(from = 1L) max: Int,
         onMaxSelectCallback: OnMaxSelectCallback? = null
     ) {
         this.maxCheckedNum = max
