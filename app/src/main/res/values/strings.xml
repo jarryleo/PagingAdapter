@@ -4,4 +4,10 @@
     <string name="no_data">无数据</string>
     <string name="loading_failed">加载失败</string>
     <string name="click_retry">点击重试</string>
+    <string name="btn_jump">知乎日报</string>
+    <string name="checked_all">全选</string>
+    <string name="checked_clear">清空</string>
+    <string name="checked_reverse">反选</string>
+    <string name="open_check_mode">开启选择模式</string>
+    <string name="close_check_mode">关闭选择模式</string>
 </resources>

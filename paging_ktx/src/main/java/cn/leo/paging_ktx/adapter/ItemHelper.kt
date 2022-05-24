@@ -379,6 +379,7 @@ class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
     var mItemHolder: ItemHolder<Any>? = null
 
     @Suppress("UNCHECKED_CAST")
+    @Deprecated("作废")
     fun setItemHolder(
         itemHolderClass: Class<out ItemHolder<out Any>>,
         payloads: MutableList<Any>? = null
@@ -387,6 +388,24 @@ class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
             if (mItemHolder == null) {
                 val newInstance = itemHolderClass.newInstance()
                 mItemHolder = newInstance as ItemHolder<Any>?
+                mItemHolder?.initView(this, adapter.getData(position))
+            }
+            mItemHolder?.bindData(this, adapter.getData(position), payloads)
+        } catch (e: InstantiationException) {
+            e.printStackTrace()
+        } catch (e: IllegalAccessException) {
+            e.printStackTrace()
+        }
+        return mItemHolder
+    }
+
+    fun setItemHolder(
+        itemHolder: ItemHolder<out Any>,
+        payloads: MutableList<Any>? = null
+    ): ItemHolder<Any>? {
+        try {
+            if (mItemHolder == null) {
+                mItemHolder = itemHolder as? ItemHolder<Any>?
                 mItemHolder?.initView(this, adapter.getData(position))
             }
             mItemHolder?.bindData(this, adapter.getData(position), payloads)

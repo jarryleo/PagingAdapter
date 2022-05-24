@@ -38,12 +38,14 @@ open class SimplePagingAdapter(
         cacheHolder(holders)
     }
 
+    fun addHolder(holder: SimpleHolder<*>) {
+        val key = holder::class.java.getSuperClassGenericType<DifferData>()
+        val value = holder as? SimpleHolder<DifferData>
+        holderMap[key] = value
+    }
+
     private fun cacheHolder(holders: Array<out SimpleHolder<*>>) {
-        holders.forEach {
-            val key = it::class.java.getSuperClassGenericType<DifferData>()
-            val value = it as? SimpleHolder<DifferData>
-            holderMap[key] = value
-        }
+        holders.forEach { addHolder(it) }
     }
 
     protected fun setHolder(key: Class<DifferData>, holder: SimpleHolder<DifferData>) {
@@ -79,11 +81,11 @@ open class SimplePagingAdapter(
         //没有对应数据类型的holder
         val holder = getHolder(getData(position))
             ?: throw RuntimeException("SimplePagingAdapter : no match holder")
-        return holder.getLayoutRes()
+        return holder.getItemLayout(position)
     }
 
     override fun bindData(item: ItemHelper, data: DifferData?, payloads: MutableList<Any>?) {
         val holder = getHolder(data) ?: return
-        item.setItemHolder(holder::class.java, payloads)
+        item.setItemHolder(holder, payloads)
     }
 }

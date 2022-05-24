@@ -4,18 +4,31 @@ import androidx.annotation.LayoutRes
 import cn.leo.paging_ktx.adapter.DifferData
 import cn.leo.paging_ktx.adapter.ItemHelper
 import cn.leo.paging_ktx.adapter.ItemHolder
-import kotlinx.android.extensions.LayoutContainer
+import cn.leo.paging_ktx.ext.getSuperClassGenericType
 
 /**
  * @author : leo
  * @date : 2020/11/10
  * @description : 简易holder
  */
-abstract class SimpleHolder<T : DifferData>(@LayoutRes val res: Int) :
+abstract class SimpleHolder<T : DifferData>(@LayoutRes val res: Int = 0) :
     ItemHolder<T>() {
 
     @LayoutRes
-    fun getLayoutRes(): Int = res
+    open fun getItemLayout(position: Int = -1): Int = res
+
+    fun getDataClassType() = this::class.java.getSuperClassGenericType<T>()
+
+    /**
+     * 子view点击id列表
+     */
+    internal val itemChildClickIds = hashSetOf<Int>()
+
+    /**
+     * 子view长按id列表
+     */
+    internal val itemChildLongClickIds = hashSetOf<Int>()
+
 
     final override fun bindData(
         item: ItemHelper,
@@ -23,6 +36,8 @@ abstract class SimpleHolder<T : DifferData>(@LayoutRes val res: Int) :
         payloads: MutableList<Any>?
     ) {
         if (data == null) return //简易holder data不为空
+        itemChildClickIds.forEach(item::addOnClickListener)
+        itemChildLongClickIds.forEach(item::addOnLongClickListener)
         bindItem(item, data, payloads)
     }
 

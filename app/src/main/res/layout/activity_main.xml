@@ -5,21 +5,17 @@
 
     <data>
 
-        <import type="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <variable
             name="adapter"
             type="cn.leo.paging_ktx.simple.SimplePagingAdapter" />
 
-        <variable
-            name="model"
-            type="cn.leo.paging_adapter.model.NewsViewModel" />
     </data>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".activity.MainActivity">
 
         <com.scwang.smart.refresh.layout.SmartRefreshLayout
             android:layout_width="match_parent"
@@ -31,9 +27,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:overScrollMode="never"
-                app:bindAdapter="@{adapter}"
-                app:bindData="@{model.pager}"
-                app:bindLinearLayoutManager="@{LinearLayoutManager.VERTICAL}"
                 tools:listitem="@layout/item_news" />
 
         </com.scwang.smart.refresh.layout.SmartRefreshLayout>
