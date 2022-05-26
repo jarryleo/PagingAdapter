@@ -376,8 +376,8 @@ fun RecyclerView.buildAdapter(init: @ClickDsl DslSimpleAdapterBuilder.() -> Unit
 @Suppress("UNUSED")
 fun RecyclerView.buildCheckedAdapter(init: @ClickDsl DslSimpleCheckedAdapterBuilder.() -> Unit): SimpleCheckedAdapter {
     val dslSimpleAdapterImpl = DslSimpleCheckedAdapterImpl(this)
-    layoutManager = dslSimpleAdapterImpl.mLayoutManager
     adapter = dslSimpleAdapterImpl.adapter
     dslSimpleAdapterImpl.init()
+    layoutManager = dslSimpleAdapterImpl.mLayoutManager
     return dslSimpleAdapterImpl.adapter
 }
