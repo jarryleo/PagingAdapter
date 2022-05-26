@@ -61,7 +61,7 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
     private fun notifyAllItem() {
         notifyItemRangeChanged(
             0,
-            itemCount - 1,
+            itemCount,
             checkedModel
         )
     }
