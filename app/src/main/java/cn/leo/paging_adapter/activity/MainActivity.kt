@@ -11,8 +11,11 @@ import cn.leo.paging_adapter.ext.binding
 import cn.leo.paging_adapter.holder.NewsHolder
 import cn.leo.paging_adapter.holder.PlaceHolder
 import cn.leo.paging_adapter.holder.TitleHolder
+import cn.leo.paging_adapter.intent.NewsIntent
 import cn.leo.paging_adapter.model.NewsViewModel
+import cn.leo.paging_ktx.adapter.DifferData
 import cn.leo.paging_ktx.ext.buildAdapter
+import cn.leo.paging_ktx.simple.SimplePager
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,6 +24,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        model.output(this) {
+            when (it) {
+                is NewsIntent.NewsStates -> initAdapter(it.pager)
+            }
+        }
+    }
+
+    private fun initAdapter(pager: SimplePager<*, DifferData>) {
         binding.adapter = binding.rvNews.buildAdapter {
             addHolder(NewsHolder()) {
                 onItemClick {
@@ -29,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             }
             addHolder(TitleHolder(), isFloatItem = true)
             addHolder(PlaceHolder())
-            setPager(model.pager)
+            setPager(pager)
         }
     }
 }

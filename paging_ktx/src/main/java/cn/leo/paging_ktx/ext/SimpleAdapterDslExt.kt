@@ -72,6 +72,7 @@ data class ItemInfo<T : DifferData>(
 /**
  * 条目选择拓展属性
  */
+@Suppress("UNUSED")
 var <T : DifferData> ItemInfo<T>.isChecked: Boolean
     get() {
         if (adapter is SimpleCheckedAdapter) {

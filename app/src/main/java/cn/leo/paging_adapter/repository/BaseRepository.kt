@@ -1,19 +1,18 @@
-package cn.leo.paging_adapter.model
+package cn.leo.paging_adapter.repository
 
-import androidx.lifecycle.ViewModel
 import cn.leo.paging_adapter.App
 import cn.leo.paging_adapter.net.Apis
+import cn.leo.paging_adapter.net.Urls
 import cn.leo.paging_adapter.net.http.OkHttp3Creator
 import cn.leo.paging_adapter.net.http.ServiceCreator
 import cn.leo.paging_adapter.net.interceptor.CacheInterceptor
 import cn.leo.paging_adapter.net.interceptor.LoggerInterceptor
-import cn.leo.paging_adapter.net.Urls
 
 /**
  * @author : leo
  * @date : 2020/4/29
  */
-open class BaseViewModel : ViewModel() {
+open class BaseRepository {
 
     companion object {
         val api by lazy {
