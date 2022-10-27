@@ -1,5 +1,6 @@
 package cn.leo.paging_adapter.model
 
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import cn.leo.paging_adapter.base.MviDispatcher
@@ -13,8 +14,8 @@ import kotlinx.coroutines.launch
  */
 class NewsViewModel : MviDispatcher<NewsIntent>() {
 
-    override fun onStart(owner: LifecycleOwner) {
-        super.onStart(owner)
+    override fun onCreate(owner: LifecycleOwner) {
+        super.onCreate(owner)
         viewModelScope.launch {
             sendResult(
                 NewsIntent.NewsStates(
@@ -22,5 +23,15 @@ class NewsViewModel : MviDispatcher<NewsIntent>() {
                 )
             )
         }
+    }
+
+    override suspend fun onHandle(event: NewsIntent) {
+        super.onHandle(event)
+        when (event) {
+            NewsIntent.TEST -> {
+                Log.e("onHandle", "onHandle:test ")
+            }
+        }
+
     }
 }

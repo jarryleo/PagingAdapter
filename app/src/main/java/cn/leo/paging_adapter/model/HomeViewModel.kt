@@ -3,34 +3,35 @@ package cn.leo.paging_adapter.model
 import android.content.Intent
 import android.view.View
 import androidx.databinding.ObservableBoolean
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingSource
 import cn.leo.paging_adapter.activity.MainActivity
+import cn.leo.paging_adapter.base.MviDispatcher
 import cn.leo.paging_adapter.bean.TitleBean
+import cn.leo.paging_adapter.intent.CheckListIntent
+import cn.leo.paging_adapter.repository.CheckListRepository
 import cn.leo.paging_ktx.adapter.DifferData
 import cn.leo.paging_ktx.simple.SimpleCheckedAdapter
 import cn.leo.paging_ktx.simple.SimplePager
+import kotlinx.coroutines.launch
 
 /**
  * @author : ling luo
  * @date : 2022/4/7
  * @description : 测试选择页model
  */
-class HomeViewModel : ViewModel() {
+class HomeViewModel : MviDispatcher<CheckListIntent>() {
 
-    val pager = SimplePager<Long, DifferData>(viewModelScope) { param ->
-        val key = param.key ?: 0L
-        val list = (0..9)
-            .map { it + key * 10 }
-            .map { TitleBean("测试$it") }
-        val nextKey = if (key > 3) {
-            null
-        } else {
-            key + 1
+    override fun onCreate(owner: LifecycleOwner) {
+        viewModelScope.launch {
+            sendResult(CheckListIntent.CheckList(
+                CheckListRepository().getPager(viewModelScope)
+            ))
         }
-        PagingSource.LoadResult.Page(list, null, nextKey)
     }
+
 
     var state = State()
     var event = Event()

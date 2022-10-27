@@ -12,7 +12,7 @@ import cn.leo.paging_adapter.net.interceptor.LoggerInterceptor
  * @author : leo
  * @date : 2020/4/29
  */
-open class BaseRepository {
+open class BaseNetRepository {
 
     companion object {
         val api by lazy {

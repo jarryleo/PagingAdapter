@@ -1,5 +1,6 @@
 package cn.leo.paging_adapter.net.http
 
+import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.ConcurrentHashMap
@@ -48,6 +49,6 @@ object ServiceCreator {
         val converterFactoryList =
             mutableListOf(GsonConverterFactory.create())
         val callAdapterFactoryList =
-            mutableListOf(CoroutineCallAdapterFactory())
+            mutableListOf<CallAdapter.Factory>()
     }
 }

@@ -13,7 +13,7 @@ import java.util.*
  * @date : 2022/10/25
  * @description : 新闻内容仓库
  */
-class NewsRepository : BaseRepository() {
+class NewsRepository : BaseNetRepository() {
 
     private val mDate = Calendar.getInstance().apply {
         add(Calendar.DATE, 1)
@@ -33,7 +33,7 @@ class NewsRepository : BaseRepository() {
             val date = it.key ?: initialKey
             try {
                 //从网络获取数据
-                val data = api.getNewsAsync(date).await()
+                val data = api.getNewsAsync(date)
                 //添加title
                 val list: MutableList<DifferData> = data.stories.toMutableList()
                 list.add(0, TitleBean(date.toString()))

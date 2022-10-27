@@ -1,5 +1,6 @@
 package cn.leo.paging_adapter.base
 
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -42,10 +43,15 @@ open class MviDispatcher<E> : ViewModel(), DefaultLifecycleObserver {
      * 输出
      */
     fun output(lifecycleOwner: LifecycleOwner?, observer: (E) -> Unit) {
+        if (lifecycleOwner == null) return
         currentVersion = version
         observerCount++
-        lifecycleOwner?.lifecycle?.addObserver(this)
-        lifecycleOwner?.lifecycleScope?.launch {
+        var lo = lifecycleOwner
+        if (lifecycleOwner is Fragment) {
+            lo = lifecycleOwner.viewLifecycleOwner
+        }
+        lo.lifecycle.addObserver(this)
+        lo.lifecycleScope.launch {
             lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 _sharedFlow?.collect {
                     if (version <= currentVersion) return@collect

@@ -20,8 +20,8 @@ data class NewsBean(
         var images: List<String>? = null
     ) : DifferData {
 
-        val image: String?
-            get() = images?.getOrNull(0)
+        val image: String
+            get() = images?.getOrNull(0) ?: ""
 
         override fun areItemsTheSame(data: DifferData): Boolean {
             return (data as? StoriesBean)?.id == id

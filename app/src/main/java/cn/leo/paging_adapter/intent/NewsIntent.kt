@@ -9,8 +9,9 @@ import cn.leo.paging_ktx.simple.SimplePager
  * @description : 新闻意图
  */
 
-sealed class NewsIntent{
-    data class NewsStates(
-        val pager: SimplePager<*,DifferData>
-    ):NewsIntent()
+sealed class NewsIntent {
+    data class NewsStates(val pager: SimplePager<*, DifferData>) : NewsIntent()
+    data class Error(val code: Int, val msg: String) : NewsIntent()
+    data class Loading(val progress: Int) : NewsIntent()
+    object TEST : NewsIntent()
 }
