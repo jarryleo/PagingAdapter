@@ -2,6 +2,7 @@ package cn.leo.paging_ktx.ext
 
 import android.view.View
 import androidx.annotation.IdRes
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.leo.paging_ktx.adapter.DifferData
@@ -10,6 +11,7 @@ import cn.leo.paging_ktx.simple.SimpleHolder
 import cn.leo.paging_ktx.simple.SimplePager
 import cn.leo.paging_ktx.simple.SimplePagingAdapter
 import cn.leo.paging_ktx.tools.FloatDecoration
+import kotlinx.coroutines.CoroutineScope
 
 /**
  * @author : ling luo
@@ -26,6 +28,8 @@ interface DslAdapterBuilder {
     fun setLayoutManager(layoutManager: RecyclerView.LayoutManager)
 
     fun <T : DifferData> setPager(pager: SimplePager<*, T>)
+
+    fun <T : DifferData> setData(scope: CoroutineScope, pagingData: PagingData<T>)
 }
 
 interface DslSimpleAdapterBuilder : DslAdapterBuilder {
@@ -57,7 +61,6 @@ interface DslClickBuilder<T : DifferData> {
 interface DslCheckedBuilder<T : DifferData> : DslClickBuilder<T> {
     fun onItemChecked(onChecked: OnItemChecked)
     fun setChecked(position: Int, isChecked: Boolean): Boolean
-    fun getCheckedPositionList(): List<Int>
     fun getCheckedItemList(): List<T>
 }
 
@@ -218,18 +221,13 @@ class DslCheckedBuilderImpl<T : DifferData>(
         return adapter.setChecked(position, isChecked)
     }
 
-    override fun getCheckedPositionList(): List<Int> {
-        return adapter.getCheckedPositionList()
-    }
-
     @Suppress("UNCHECKED_CAST")
     override fun getCheckedItemList(): List<T> {
-        return adapter.getCheckedPositionList()
-            .map { adapter.getData(it) as T }
+        return adapter.getCheckedItemList().map { it as T }
     }
 }
 
-class ClickEventStore(val recyclerView: RecyclerView, val adapter: SimplePagingAdapter) {
+class ClickEventStore(private val recyclerView: RecyclerView, val adapter: SimplePagingAdapter) {
 
     private val clickEventList = mutableListOf<DslClickBuilderImpl<*>>()
 
@@ -261,7 +259,7 @@ class ClickEventStore(val recyclerView: RecyclerView, val adapter: SimplePagingA
     }
 }
 
-class DslSimpleAdapterImpl(val recyclerView: RecyclerView) : DslSimpleAdapterBuilder {
+class DslSimpleAdapterImpl(private val recyclerView: RecyclerView) : DslSimpleAdapterBuilder {
     private val simplePagingAdapter = SimplePagingAdapter()
     internal var mLayoutManager: RecyclerView.LayoutManager =
         LinearLayoutManager(recyclerView.context)
@@ -294,9 +292,14 @@ class DslSimpleAdapterImpl(val recyclerView: RecyclerView) : DslSimpleAdapterBui
     override fun <T : DifferData> setPager(pager: SimplePager<*, T>) {
         adapter.setPager(pager)
     }
+
+    override fun <T : DifferData> setData(scope: CoroutineScope, pagingData: PagingData<T>) {
+        adapter.setData(scope, pagingData)
+    }
 }
 
-class DslSimpleCheckedAdapterImpl(val recyclerView: RecyclerView) : DslSimpleCheckedAdapterBuilder {
+class DslSimpleCheckedAdapterImpl(private val recyclerView: RecyclerView) :
+    DslSimpleCheckedAdapterBuilder {
     private val simpleCheckedAdapter = SimpleCheckedAdapter()
     internal var mLayoutManager: RecyclerView.LayoutManager =
         LinearLayoutManager(recyclerView.context)
@@ -356,6 +359,10 @@ class DslSimpleCheckedAdapterImpl(val recyclerView: RecyclerView) : DslSimpleChe
     override fun <T : DifferData> setPager(pager: SimplePager<*, T>) {
         adapter.setPager(pager)
     }
+
+    override fun <T : DifferData> setData(scope: CoroutineScope, pagingData: PagingData<T>) {
+        adapter.setData(scope, pagingData)
+    }
 }
 
 /**
@@ -366,8 +373,9 @@ fun RecyclerView.buildAdapter(init: @ClickDsl DslSimpleAdapterBuilder.() -> Unit
     val dslSimpleAdapterImpl = DslSimpleAdapterImpl(this)
     layoutManager = dslSimpleAdapterImpl.mLayoutManager
     adapter = dslSimpleAdapterImpl.adapter
-    dslSimpleAdapterImpl.init()
-    return dslSimpleAdapterImpl.adapter
+    return dslSimpleAdapterImpl.adapter.apply {
+        dslSimpleAdapterImpl.init()
+    }
 }
 
 /**
@@ -376,8 +384,9 @@ fun RecyclerView.buildAdapter(init: @ClickDsl DslSimpleAdapterBuilder.() -> Unit
 @Suppress("UNUSED")
 fun RecyclerView.buildCheckedAdapter(init: @ClickDsl DslSimpleCheckedAdapterBuilder.() -> Unit): SimpleCheckedAdapter {
     val dslSimpleAdapterImpl = DslSimpleCheckedAdapterImpl(this)
-    adapter = dslSimpleAdapterImpl.adapter
-    dslSimpleAdapterImpl.init()
     layoutManager = dslSimpleAdapterImpl.mLayoutManager
-    return dslSimpleAdapterImpl.adapter
+    adapter = dslSimpleAdapterImpl.adapter
+    return dslSimpleAdapterImpl.adapter.apply {
+        dslSimpleAdapterImpl.init()
+    }
 }

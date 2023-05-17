@@ -100,6 +100,7 @@ fun bindingState(smartRefreshLayout: SmartRefreshLayout, adapter: SimplePagingAd
                 }
                 smartRefreshLayout.resetNoMoreData()
             }
+
             is State.Success -> {
                 if (adapter.itemCount == 0) {
                     statePager.showEmpty()
@@ -109,6 +110,7 @@ fun bindingState(smartRefreshLayout: SmartRefreshLayout, adapter: SimplePagingAd
                 smartRefreshLayout.finishRefresh(true)
                 smartRefreshLayout.setNoMoreData(it.noMoreData)
             }
+
             is State.Error -> {
                 statePager.showError()
                 smartRefreshLayout.finishRefresh(false)
@@ -121,6 +123,7 @@ fun bindingState(smartRefreshLayout: SmartRefreshLayout, adapter: SimplePagingAd
             is State.Loading -> {
                 smartRefreshLayout.resetNoMoreData()
             }
+
             is State.Success -> {
                 if (it.noMoreData) {
                     smartRefreshLayout.finishLoadMoreWithNoMoreData()
@@ -128,6 +131,7 @@ fun bindingState(smartRefreshLayout: SmartRefreshLayout, adapter: SimplePagingAd
                     smartRefreshLayout.finishLoadMore(true)
                 }
             }
+
             is State.Error -> {
                 smartRefreshLayout.finishLoadMore(false)
             }

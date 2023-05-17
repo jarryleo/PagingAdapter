@@ -1,7 +1,9 @@
 package cn.leo.paging_ktx.simple
 
+import android.util.Log
 import androidx.annotation.IntRange
 import cn.leo.paging_ktx.adapter.CheckedData
+import cn.leo.paging_ktx.adapter.DifferData
 
 /**
  * @author : ling luo
@@ -13,17 +15,17 @@ import cn.leo.paging_ktx.adapter.CheckedData
  */
 @Suppress("UNUSED")
 open class SimpleCheckedAdapter : SimplePagingAdapter() {
-    enum class CheckedModel {
+    enum class CheckedMode {
         NONE, SINGLE, MULTI  //选择模式，无，单选/多选
     }
 
-    private var checkedModel = CheckedModel.NONE  //当前选择模式
+    private var checkedMode = CheckedMode.NONE  //当前选择模式
 
-    private var singleCheckIndex = -1 //单选索引
+    private var singleCheckedItem: DifferData? = null //单选条目
 
-    private var singleModelCancelable = false  //单选是否可取消选择
+    private var singleModeCancelable = false  //单选是否可取消选择
 
-    private var multiCheckIndexList: MutableSet<Int> = mutableSetOf() //多选索引
+    private var multiCheckedList: MutableSet<DifferData> = mutableSetOf() //多选条目
 
     private var maxCheckedNum = Int.MAX_VALUE  //多选限制，最多选择多少个
 
@@ -61,57 +63,57 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
     private fun notifyAllItem() {
         notifyItemRangeChanged(
             0,
-            itemCount,
-            checkedModel
+            itemCount - 1,
+            checkedMode
         )
     }
 
     /**
      * 设置选择模式
      */
-    private fun setCheckModel(model: CheckedModel) {
-        checkedModel = model
+    private fun setCheckMode(mode: CheckedMode) {
+        checkedMode = mode
         notifyAllItem()
     }
 
     /**
      * 关闭选择模式
      */
-    open fun closeCheckModel() {
-        setCheckModel(CheckedModel.NONE)
+    open fun closeCheckMode() {
+        setCheckMode(CheckedMode.NONE)
     }
 
     /**
      * 设置单选模式
      * @param cancelable 是否可取消选择
      */
-    open fun setSingleCheckModel(cancelable: Boolean = true) {
-        singleModelCancelable = cancelable
-        if (!cancelable && singleCheckIndex == -1) {
-            singleCheckIndex = 0
+    open fun setSingleCheckMode(cancelable: Boolean = true) {
+        singleModeCancelable = cancelable
+        if (!cancelable && singleCheckedItem == null) {
+            singleCheckedItem = getData(0)
         }
-        setCheckModel(CheckedModel.SINGLE)
+        setCheckMode(CheckedMode.SINGLE)
     }
 
     /**
      * 设置多选模式
      */
-    open fun setMultiCheckModel() {
-        setCheckModel(CheckedModel.MULTI)
+    open fun setMultiCheckMode() {
+        setCheckMode(CheckedMode.MULTI)
     }
 
     /**
      * 是否是单选模式
      */
-    open fun isSingleCheckedModel(): Boolean {
-        return checkedModel == CheckedModel.SINGLE
+    open fun isSingleCheckedMode(): Boolean {
+        return checkedMode == CheckedMode.SINGLE
     }
 
     /**
      * 是否是多选模式
      */
-    open fun isMultiCheckedModel(): Boolean {
-        return checkedModel == CheckedModel.MULTI
+    open fun isMultiCheckedMode(): Boolean {
+        return checkedMode == CheckedMode.MULTI
     }
 
     /**
@@ -125,7 +127,7 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
     ) {
         this.maxCheckedNum = max
         this.onMaxSelectCallback = onMaxSelectCallback
-        if (multiCheckIndexList.size > max) {
+        if (multiCheckedList.size > max) {
             cancelChecked()
         }
     }
@@ -134,21 +136,19 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      * 反选
      */
     open fun reverseChecked() {
-        if (checkedModel != CheckedModel.MULTI) return
+        if (checkedMode != CheckedMode.MULTI) return
         //获取所有是CheckedData的数据
-        val left = (0 until itemCount)
+        val left = snapshot()
             .asSequence()
-            .filter { getData(it) is CheckedData }
+            .filter { it is CheckedData }
             .toMutableSet()
-        left.removeAll(multiCheckIndexList)
-        val copy = multiCheckIndexList.toMutableSet()
+        left.removeAll(multiCheckedList)
+        val copy = multiCheckedList.toMutableSet()
         copy.forEach {
             setChecked(it, false)
         }
-        for (i in left) {
-            if (!setChecked(i, true)) {
-                return
-            }
+        left.filterNotNull().forEach {
+            setChecked(it, true)
         }
     }
 
@@ -156,13 +156,11 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      * 全选
      */
     open fun checkedAll() {
-        if (checkedModel != CheckedModel.MULTI) return
-        val all = (0 until itemCount).filter {
-            getData(it) is CheckedData
-        }.toMutableSet()
+        if (checkedMode != CheckedMode.MULTI) return
+        val all = snapshot().filterIsInstance<CheckedData>().toMutableSet()
         //排除已选中的条目，剩余全部设置选中
         val left = all.toMutableSet()
-        left.removeAll(multiCheckIndexList)
+        left.removeAll(multiCheckedList)
         for (i in left) {
             if (!setChecked(i, true)) {
                 return
@@ -174,11 +172,22 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      * 取消选择
      */
     open fun cancelChecked() {
-        singleCheckIndex = -1
-        val copy = multiCheckIndexList.toMutableSet()
+        singleCheckedItem = null
+        val copy = multiCheckedList.toMutableSet()
         copy.forEach {
             setChecked(it, false)
         }
+    }
+
+    /**
+     * 设置条目选择状态
+     * @param item 条目对象
+     * @param isChecked 是否选择
+     * @return 是否改变状态
+     */
+    open fun setChecked(item: DifferData, isChecked: Boolean): Boolean {
+        val position = snapshot().indexOf(item)
+        return setChecked(position, isChecked)
     }
 
     /**
@@ -188,38 +197,43 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      * @return 是否改变状态
      */
     open fun setChecked(position: Int, isChecked: Boolean): Boolean {
+        val item = getData(position)
         //非可选择条目，不可选择
-        if (getData(position) !is CheckedData) return false
-        when (checkedModel) {
-            CheckedModel.SINGLE -> {
-                if (!singleModelCancelable && !isChecked) return false
-                if (singleCheckIndex == position && isChecked) return false
-                if (singleCheckIndex != -1) {
-                    notifyItemChanged(singleCheckIndex)
+        if (item !is CheckedData) {
+            Log.e("SimpleCheckedAdapter", "entity is not implement CheckedData")
+            return false
+        }
+        when (checkedMode) {
+            CheckedMode.SINGLE -> {
+                if (!singleModeCancelable && !isChecked) return false
+                val singleCheckedData = singleCheckedItem
+                if (singleCheckedData == item && isChecked) return false
+                if (singleCheckedData != null) {
+                    notifyItemChanged(position)
                 }
-                singleCheckIndex = if (isChecked) position else -1
+                singleCheckedItem = if (isChecked) item else null
                 notifyItemChanged(position)
                 onCheckedCallback?.onChecked(
                     position,
                     isChecked,
                     isAllChecked(),
-                    if (singleCheckIndex == -1) 0 else 1,
+                    if (singleCheckedData == null) 0 else 1,
                     canCheckedItemCount()
                 )
                 return true
             }
-            CheckedModel.MULTI -> {
-                val contains = multiCheckIndexList.contains(position)
+            CheckedMode.MULTI -> {
+                val contains = multiCheckedList.contains(item)
                 if (contains == isChecked) return false
                 if (isChecked) {
-                    return if (multiCheckIndexList.size < maxCheckedNum) {
-                        multiCheckIndexList.add(position)
+                    return if (multiCheckedList.size < maxCheckedNum) {
+                        multiCheckedList.add(item)
                         notifyItemChanged(position, isChecked)
                         onCheckedCallback?.onChecked(
                             position,
                             isChecked,
                             isAllChecked(),
-                            multiCheckIndexList.size,
+                            multiCheckedList.size,
                             canCheckedItemCount()
                         )
                         true
@@ -229,13 +243,13 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
                         false
                     }
                 } else {
-                    multiCheckIndexList.remove(position)
+                    multiCheckedList.remove(item)
                     notifyItemChanged(position, isChecked)
                     onCheckedCallback?.onChecked(
                         position,
                         isChecked,
                         isAllChecked(),
-                        multiCheckIndexList.size,
+                        multiCheckedList.size,
                         canCheckedItemCount()
                     )
                     return true
@@ -251,10 +265,10 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      * 判断是否全选
      */
     open fun isAllChecked(): Boolean {
-        if (checkedModel == CheckedModel.SINGLE) {
-            return canCheckedItemCount() == 1 && singleCheckIndex != -1
+        if (checkedMode == CheckedMode.SINGLE) {
+            return canCheckedItemCount() == 1 && singleCheckedItem != null
         }
-        return multiCheckIndexList.size == canCheckedItemCount()
+        return multiCheckedList.size == canCheckedItemCount()
     }
 
     /**
@@ -269,37 +283,52 @@ open class SimpleCheckedAdapter : SimplePagingAdapter() {
      * 判断条目是否被选中
      */
     open fun itemIsChecked(position: Int): Boolean {
-        return when (checkedModel) {
-            CheckedModel.MULTI -> multiCheckIndexList.contains(position)
-            CheckedModel.SINGLE -> singleCheckIndex == position
-            CheckedModel.NONE -> false
+        val item = getData(position)
+        return when (checkedMode) {
+            CheckedMode.MULTI -> multiCheckedList.contains(item)
+            CheckedMode.SINGLE -> singleCheckedItem == item
+            CheckedMode.NONE -> false
         }
     }
 
     /**
-     * 获取所有已选择的索引
+     * 获取所有已选择条目
      */
-    open fun getCheckedPositionList(): List<Int> {
-        if (isSingleCheckedModel()) {
-            return if (singleCheckIndex == -1) {
+    open fun getCheckedItemList(): List<DifferData> {
+        if (isSingleCheckedMode()) {
+            val checkData = singleCheckedItem
+            return if (checkData == null) {
                 emptyList()
             } else {
-                listOf(singleCheckIndex)
+                listOf(checkData)
             }
         }
-        return multiCheckIndexList.toList()
+        return multiCheckedList.toList()
     }
 
     /**
      * 获取已选择数量
      */
     open fun getCheckedCount(): Int {
-        return getCheckedPositionList().size
+        return getCheckedItemList().size
     }
 
     /**
      * 获取单选索引
      */
-    open fun getSingleCheckedPosition() = singleCheckIndex
+    open fun getSingleCheckedItem() = singleCheckedItem
+
+    /**
+     * 条目被删除，同时删除选中索引
+     */
+    override fun removeItem(position: Int) {
+        super.removeItem(position)
+        multiCheckedList.remove(getData(position))
+    }
+
+    override fun removeItem(item: DifferData) {
+        super.removeItem(item)
+        multiCheckedList.remove(item)
+    }
 
 }

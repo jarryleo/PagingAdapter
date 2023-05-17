@@ -11,11 +11,11 @@
 
         <variable
             name="state"
-            type="cn.leo.paging_adapter.model.HomeViewModel.State" />
+            type="cn.leo.paging_adapter.model.HomeViewModel1.State" />
 
         <variable
             name="event"
-            type="cn.leo.paging_adapter.model.HomeViewModel.Event" />
+            type="cn.leo.paging_adapter.model.HomeViewModel1.Event" />
 
     </data>
 
@@ -51,13 +51,6 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/btn_jump"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{event::jump}"
-                android:text="@string/btn_jump" />
-
-            <Button
                 android:id="@+id/btn_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -80,8 +73,42 @@
                 android:onClick="@{()->event.reverse(adapter)}"
                 android:text="@string/checked_reverse" />
 
+            <Button
+                android:id="@+id/btn_del"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{()->event.del(adapter)}"
+                android:text="@string/checked_del" />
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_jump"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{event::jump}"
+                android:text="@string/btn_jump" />
+
+            <Button
+                android:id="@+id/btn_insert_head"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{()->event.insertHead()}"
+                android:text="@string/insert_head" />
+
+            <Button
+                android:id="@+id/btn_insert_foot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{()->event.insertFoot()}"
+                android:text="@string/insert_foot" />
+
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </layout>

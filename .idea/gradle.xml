@@ -15,7 +15,6 @@
             <option value="$PROJECT_DIR$/paging_ktx" />
           </set>
         </option>
-        <option name="resolveModulePerSourceSet" value="false" />
       </GradleProjectSettings>
     </option>
   </component>

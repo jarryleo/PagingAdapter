@@ -5,35 +5,43 @@ import android.view.View
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.insertSeparators
 import cn.leo.paging_adapter.activity.MainActivity
 import cn.leo.paging_adapter.bean.TitleBean
-import cn.leo.paging_adapter.db.RepoDatabase
 import cn.leo.paging_adapter.db.RepoEntity
+import cn.leo.paging_ktx.adapter.DifferData
 import cn.leo.paging_ktx.simple.SimpleCheckedAdapter
-import cn.leo.paging_ktx.simple.SimplePager
-import kotlinx.coroutines.launch
+import cn.leo.paging_ktx.simple.SimpleListPager
+import kotlinx.coroutines.flow.map
 
 /**
  * @author : ling luo
  * @date : 2022/4/7
  * @description : 测试选择页model
  */
-class HomeViewModel : ViewModel() {
+class HomeViewModel1 : ViewModel() {
 
-    private val list = (0..50).map { TitleBean("测试$it") }
-    val pager = SimplePager(viewModelScope,
-        pagingSource = { RepoDatabase.instance.repoDao().get() }
-    )
+    private val pager = SimpleListPager(viewModelScope, emptyList<DifferData>())
+    val data = pager.getData().map {
+        it.insertSeparators { differData: DifferData?, differData2: DifferData? ->
+            if (differData !is RepoEntity) return@insertSeparators TitleBean("标题0-4")
+            val next = differData2 as? RepoEntity ?: return@insertSeparators null
+            val id = next.id
+            if (id % 5 == 0) {
+                return@insertSeparators TitleBean("标题$id-${id + 4}")
+            }
+            null
+        }
+    }
 
     var state = State()
     var event = Event()
 
     fun init() {
-
         val list = (0..50).map { RepoEntity(it, "测试DB$it") }
-        viewModelScope.launch {
-            RepoDatabase.instance.repoDao().clear()
-            RepoDatabase.instance.repoDao().insert(list)
+        pager.edit {
+            it.clear()
+            it.addAll(list)
         }
     }
 
@@ -78,29 +86,25 @@ class HomeViewModel : ViewModel() {
         }
 
         fun del(adapter: SimpleCheckedAdapter) {
-            viewModelScope.launch {
-                adapter.getCheckedItemList().forEach {
-                    //adapter.removeItem(it)
-                    adapter.removeItem(it)
-                    val item = it as? RepoEntity
-                    item?.let {
-                        RepoDatabase.instance.repoDao().delete(item)
-                    }
-                }
+            pager.edit {
+                it.removeAll(adapter.getCheckedItemList())
             }
+            adapter.cancelChecked()
         }
 
         fun insertHead() {
-            val list = (-10..-1).map { RepoEntity(it, "测试DB$it") }
-            viewModelScope.launch {
-                RepoDatabase.instance.repoDao().insert(list)
+            pager.edit {
+                val id = ((it.firstOrNull() as? RepoEntity)?.id ?: 0) - 1
+                val item = RepoEntity(id, "头部添加$id")
+                it.add(0, item)
             }
         }
 
         fun insertFoot() {
-            val list = (51..60).map { RepoEntity(it, "测试DB$it") }
-            viewModelScope.launch {
-                RepoDatabase.instance.repoDao().insert(list)
+            pager.edit {
+                val id = ((it.lastOrNull() as? RepoEntity)?.id ?: 0) + 1
+                val item = RepoEntity(id, "尾部添加$id")
+                it.add(item)
             }
         }
 
