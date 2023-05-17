@@ -371,11 +371,10 @@ class DslSimpleCheckedAdapterImpl(private val recyclerView: RecyclerView) :
 @Suppress("UNUSED")
 fun RecyclerView.buildAdapter(init: @ClickDsl DslSimpleAdapterBuilder.() -> Unit): SimplePagingAdapter {
     val dslSimpleAdapterImpl = DslSimpleAdapterImpl(this)
-    layoutManager = dslSimpleAdapterImpl.mLayoutManager
     adapter = dslSimpleAdapterImpl.adapter
-    return dslSimpleAdapterImpl.adapter.apply {
-        dslSimpleAdapterImpl.init()
-    }
+    dslSimpleAdapterImpl.init()
+    layoutManager = dslSimpleAdapterImpl.mLayoutManager
+    return dslSimpleAdapterImpl.adapter
 }
 
 /**
@@ -384,9 +383,8 @@ fun RecyclerView.buildAdapter(init: @ClickDsl DslSimpleAdapterBuilder.() -> Unit
 @Suppress("UNUSED")
 fun RecyclerView.buildCheckedAdapter(init: @ClickDsl DslSimpleCheckedAdapterBuilder.() -> Unit): SimpleCheckedAdapter {
     val dslSimpleAdapterImpl = DslSimpleCheckedAdapterImpl(this)
-    layoutManager = dslSimpleAdapterImpl.mLayoutManager
     adapter = dslSimpleAdapterImpl.adapter
-    return dslSimpleAdapterImpl.adapter.apply {
-        dslSimpleAdapterImpl.init()
-    }
+    dslSimpleAdapterImpl.init()
+    layoutManager = dslSimpleAdapterImpl.mLayoutManager
+    return dslSimpleAdapterImpl.adapter
 }
