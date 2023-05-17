@@ -30,7 +30,7 @@ allprojects {
 2. 依赖：在模块build.gradle添加
 ```
 dependencies {
-	    implementation 'com.github.jarryleo:PagingAdapter:3.1.4'
+	    implementation 'com.github.jarryleo:PagingAdapter:3.1.5'
 }
 ```
 
