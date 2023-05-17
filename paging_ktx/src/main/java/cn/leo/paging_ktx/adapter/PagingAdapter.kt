@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
  * @author : leo
  * @date : 2020/5/11
  */
-@Suppress("UNUSED", "UNCHECKED_CAST", "MemberVisibilityCanBePrivate")
+@Suppress("UNUSED", "MemberVisibilityCanBePrivate")
 abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHolder> {
 
     constructor() : super(itemCallback())
@@ -332,6 +332,11 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
     private val mOnPrependStateListenerArray
             by lazy { ArrayList<(State) -> Unit>() }
 
+    //记录上一次的状态
+    private var mLastRefreshState:State? = null
+    private var mLastLoadMoreState:State? = null
+    private var mLastPreparedState:State? = null
+
     init {
         addLoadStateListener {
             dispatchState(
@@ -370,6 +375,17 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
      * 通知给所有订阅者
      */
     private fun observer(state: State, stateListener: ArrayList<(State) -> Unit>) {
+        when (stateListener) {
+            mOnRefreshStateListenerArray -> {
+                mLastRefreshState = state
+            }
+            mOnLoadMoreStateListenerArray -> {
+                mLastLoadMoreState = state
+            }
+            mOnPrependStateListenerArray -> {
+                mLastPreparedState = state
+            }
+        }
         stateListener.forEach { it(state) }
     }
 
@@ -377,6 +393,7 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
      * 刷新状态监听
      */
     fun addOnRefreshStateListener(listener: (State) -> Unit) {
+        mLastRefreshState?.let(listener)
         mOnRefreshStateListenerArray += listener
     }
 
@@ -384,6 +401,7 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
      * 向后加载更多状态监听
      */
     fun addOnLoadMoreStateListener(listener: (State) -> Unit) {
+        mLastLoadMoreState?.let(listener)
         mOnLoadMoreStateListenerArray += listener
     }
 
@@ -391,6 +409,7 @@ abstract class PagingAdapter<T : Any> : PagingDataAdapter<T, RecyclerView.ViewHo
      * 向前加载更多状态监听
      */
     fun addOnPrependStateListener(listener: (State) -> Unit) {
+        mLastPreparedState?.let(listener)
         mOnPrependStateListenerArray += listener
     }
 

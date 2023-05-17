@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
  *  @author : leo
  *  RecyclerView 间距调整，不是分割线，只是间距
  */
-@Suppress("UNUSED", "UNCHECKED_CAST", "MemberVisibilityCanBePrivate")
+@Suppress("UNUSED", "MemberVisibilityCanBePrivate")
 class PaddingDecoration : RecyclerView.ItemDecoration {
     //条目之间的间距，不包含边缘
     var leftSpace: Int = 0
@@ -75,10 +75,10 @@ class PaddingDecoration : RecyclerView.ItemDecoration {
                     //每行数量不等处理 (跨列的条目，多少列算多少个) ，原理是假设当前条目之前的所有条目都是不跨列的
                     //总条目数
                     val virtualItemSpanCount =
-                        (0 until itemCount).sumBy { spanSizeLookup.getSpanSize(it) }
+                        (0 until itemCount).sumOf { spanSizeLookup.getSpanSize(it) }
                     //虚拟指针(跨列的条目，多少列算多少个)，原理是假设当前条目之前的所有条目都是不跨列的
                     val virtualPosition =
-                        (0 until position).sumBy { spanSizeLookup.getSpanSize(it) }
+                        (0 until position).sumOf { spanSizeLookup.getSpanSize(it) }
                     //当前条目在它所在行处于第几列
                     val column = virtualPosition % spanCount
                     //当前view 所占列加它左边的列数

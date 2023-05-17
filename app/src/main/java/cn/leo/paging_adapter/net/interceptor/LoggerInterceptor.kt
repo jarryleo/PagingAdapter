@@ -32,7 +32,7 @@ class LoggerInterceptor : Interceptor {
         val source = body!!.source()
         // Buffer the entire body.
         source.request(Integer.MAX_VALUE.toLong())
-        val buffer = source.buffer()
+        val buffer = source.buffer
         //接口数据大于32K不显示
         if (buffer.size > 1024 * 32) {
             Log.d(

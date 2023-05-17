@@ -1,12 +1,14 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
+    //id 'kotlin-android-extensions'
     id 'kotlin-kapt'
 }
 
 android {
     compileSdkVersion 31
+    buildToolsVersion '30.0.3'
+    namespace 'cn.leo.paging_adapter'
 
     defaultConfig {
         applicationId "cn.leo.paging_adapter"
@@ -34,7 +36,6 @@ android {
     buildFeatures {
         dataBinding = true
     }
-    buildToolsVersion '30.0.3'
 }
 
 dependencies {
