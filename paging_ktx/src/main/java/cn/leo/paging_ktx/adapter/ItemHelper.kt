@@ -327,6 +327,13 @@ class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
         return this
     }
 
+    fun addOnClickListeners(@IdRes vararg viewIds: Int): ItemHelper {
+        viewIds.forEach {
+            addOnClickListener(it)
+        }
+        return this
+    }
+
     /**
      * 给条目中的view添加点击事件
      *
@@ -334,6 +341,13 @@ class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
      */
     fun addOnClickListener(view: View): ItemHelper {
         addOnClickListener(view.id)
+        return this
+    }
+
+    fun addOnClickListeners(vararg views: View): ItemHelper {
+        views.forEach {
+            addOnClickListener(it)
+        }
         return this
     }
 
@@ -351,6 +365,13 @@ class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
         return this
     }
 
+    fun addOnLongClickListeners(@IdRes vararg viewIds: Int): ItemHelper {
+        viewIds.forEach {
+            addOnLongClickListener(it)
+        }
+        return this
+    }
+
     /**
      * 给条目中的view添加长按事件
      *
@@ -358,6 +379,13 @@ class ItemHelper(private val viewHolder: PagingAdapter<*>.ViewHolder) :
      */
     fun addOnLongClickListener(view: View): ItemHelper {
         addOnLongClickListener(view.id)
+        return this
+    }
+
+    fun addOnLongClickListeners(vararg views: View): ItemHelper {
+        views.forEach {
+            addOnLongClickListener(it)
+        }
         return this
     }
 
