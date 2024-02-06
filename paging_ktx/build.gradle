@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 31
+    compileSdk 34
     namespace 'cn.leo.paging_ktx'
 
     defaultConfig {
@@ -12,5 +12,5 @@ android {
 }
 
 dependencies {
-    api 'androidx.paging:paging-runtime-ktx:3.1.1'
+    api 'androidx.paging:paging-runtime-ktx:3.2.1'
 }

@@ -6,14 +6,14 @@ plugins {
 }
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion '30.0.3'
+    compileSdk 34
+    //buildToolsVersion '30.0.3'
     namespace 'cn.leo.paging_adapter'
 
     defaultConfig {
         applicationId "cn.leo.paging_adapter"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -43,7 +43,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.material:material:1.5.0'
 
-    def room_version = "2.4.2"
+    def room_version = "2.6.1"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
