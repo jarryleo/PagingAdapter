@@ -2,6 +2,7 @@ package cn.leo.paging_adapter.ext
 
 import android.view.View
 import android.widget.Checkable
+import cn.leo.paging_adapter.R
 
 /**
  * 防重复点击拓展
@@ -19,6 +20,7 @@ inline fun <T : View> T.singleClick(time: Long = 800, crossinline block: (T) -> 
 /**
  * 兼容点击事件设置为this的情况
  */
+@Suppress("unused")
 fun <T : View> T.singleClick(onClickListener: View.OnClickListener, time: Long = 800) {
     setOnClickListener {
         val currentTimeMillis = System.currentTimeMillis()
@@ -30,5 +32,5 @@ fun <T : View> T.singleClick(onClickListener: View.OnClickListener, time: Long =
 }
 
 var <T : View> T.lastClickTime: Long
-    set(value) = setTag(1766613352, value)
-    get() = getTag(1766613352) as? Long ?: 0
+    set(value) = setTag(R.id.single_click_id, value)
+    get() = getTag(R.id.single_click_id) as? Long ?: 0

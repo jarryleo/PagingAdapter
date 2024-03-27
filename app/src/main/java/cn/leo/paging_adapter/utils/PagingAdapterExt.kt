@@ -16,9 +16,10 @@ import com.scwang.smart.refresh.layout.constant.RefreshState
 /**
  * 绑定下拉刷新状态
  */
+@Suppress("unused")
 fun SimplePagingAdapter.bind(smartRefreshLayout: SmartRefreshLayout) {
     //状态页
-    var statePager = smartRefreshLayout.getTag(1766613352) as? StatusPager
+    var statePager = smartRefreshLayout.getTag(R.id.status_pager_id) as? StatusPager
     if (statePager == null) {
         statePager = StatusPager.builder(smartRefreshLayout)
             .emptyViewLayout(R.layout.state_empty)
@@ -29,7 +30,7 @@ fun SimplePagingAdapter.bind(smartRefreshLayout: SmartRefreshLayout) {
                 this.refresh()
             }
             .build()
-        smartRefreshLayout.setTag(1766613352, statePager)
+        smartRefreshLayout.setTag(R.id.status_pager_id, statePager)
     }
     //设置下拉刷新
     smartRefreshLayout.setOnRefreshListener {

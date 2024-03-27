@@ -2,5 +2,6 @@
 <resources>
 
     <item name="status_pager_id" type="id" />
+    <item name="single_click_id" type="id" />
 
 </resources>
