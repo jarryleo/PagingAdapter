@@ -96,7 +96,8 @@ fun bindingState(smartRefreshLayout: SmartRefreshLayout, adapter: SimplePagingAd
             is State.Loading -> {
                 //如果是手动下拉刷新，则不展示loading页
                 if (smartRefreshLayout.state != RefreshState.Refreshing) {
-                    statePager.showLoading()
+                    //statePager.showLoading()
+                    smartRefreshLayout.autoRefreshAnimationOnly()
                 }
                 smartRefreshLayout.resetNoMoreData()
             }

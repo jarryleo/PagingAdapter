@@ -24,7 +24,7 @@ class HomeViewModel1 : ViewModel() {
     private val pager = SimpleListPager(viewModelScope, emptyList<DifferData>())
     val data = pager.getData().map {
         it.insertSeparators { differData: DifferData?, differData2: DifferData? ->
-            if (differData !is RepoEntity) return@insertSeparators TitleBean("标题0-4")
+            //if (differData !is RepoEntity) return@insertSeparators TitleBean("标题0-4")
             val next = differData2 as? RepoEntity ?: return@insertSeparators null
             val id = next.id
             if (id % 5 == 0) {
@@ -62,9 +62,11 @@ class HomeViewModel1 : ViewModel() {
                 adapter.isMultiCheckedMode() -> {
                     adapter.closeCheckMode()
                 }
+
                 adapter.isSingleCheckedMode() -> {
                     adapter.closeCheckMode()
                 }
+
                 else -> {
 //                    adapter.setSingleCheckModel(false)
                     adapter.setMultiCheckMode()

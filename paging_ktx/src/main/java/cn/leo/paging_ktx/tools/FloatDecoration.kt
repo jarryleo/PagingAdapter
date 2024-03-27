@@ -44,12 +44,12 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
         state: RecyclerView.State
     ) {
         super.onDrawOver(c, parent, state)
-        val layoutManager = parent.layoutManager
+        val layoutManager = parent.layoutManager ?: return
         var firstView = parent.findChildViewUnder(
             mClipBounds.left.toFloat(),
             mRecyclerViewPaddingTop + mHeaderTopMargin * 1f
         )
-        if (firstView == null) firstView = layoutManager!!.getChildAt(0)
+        if (firstView == null) firstView = layoutManager.getChildAt(0)
         var secondView =
             parent.findChildViewUnder(mClipBounds.left.toFloat(), mFloatBottom.toFloat())
         if (firstView == null) return
@@ -58,18 +58,18 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
         val firstViewPosition = parent.getChildAdapterPosition(firstView)
         var secondViewPosition = parent.getChildAdapterPosition(secondView)
         for (i in secondViewPosition - 1 downTo firstViewPosition + 1) {
-            val itemViewType = adapter!!.getItemViewType(i)
+            val itemViewType = adapter?.getItemViewType(i) ?: continue
             if (isFloatHolder(itemViewType)) {
-                val view = layoutManager!!.findViewByPosition(i)
-                if (view!!.left == firstView.left) {
+                val view = layoutManager.findViewByPosition(i)
+                if (view?.left == firstView.left) {
                     secondView = view
                     secondViewPosition = i
                 }
                 break
             }
         }
-        val firstItemType = adapter!!.getItemViewType(firstViewPosition)
-        val secondItemType = adapter.getItemViewType(secondViewPosition)
+        val firstItemType = adapter?.getItemViewType(firstViewPosition)
+        val secondItemType = adapter?.getItemViewType(secondViewPosition)
         if (!hasInit) {
             touch(parent)
         }
@@ -80,8 +80,9 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
             }
             var top = 0
             if (isFloatHolder(secondItemType)) {
-                if (mFloatView == null || secondView == null) return
-                top = secondView.top - mFloatView!!.height - mRecyclerViewPaddingTop
+                val floatView = mFloatView
+                if (floatView == null || secondView == null) return
+                top = secondView.top - floatView.height - mRecyclerViewPaddingTop
             }
             drawFloatView(mFloatView, c, top)
             return
@@ -91,16 +92,17 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
                 mFloatPosition = findPreFloatPosition(parent)
                 mFloatView = getFloatView(parent, null)
             }
-            if (mFloatView == null || secondView == null) return
-            val top = secondView.top - mFloatView!!.height - mRecyclerViewPaddingTop
+            val floatView = mFloatView
+            if (floatView == null || secondView == null) return
+            val top = secondView.top - secondView.height - mRecyclerViewPaddingTop
             drawFloatView(mFloatView, c, top)
             return
         }
-        if (mFloatView == null || lastLayoutCount != layoutManager!!.childCount) {
+        if (mFloatView == null || lastLayoutCount != layoutManager.childCount) {
             mFloatPosition = findPreFloatPosition(parent)
             mFloatView = getFloatView(parent, null)
         }
-        lastLayoutCount = layoutManager!!.childCount
+        lastLayoutCount = layoutManager.childCount
         drawFloatView(mFloatView, c, 0)
     }
 
@@ -155,7 +157,7 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
                     mClipBounds.contains(e.x.toInt(), e.y.toInt())
                 if (contains) {
                     mGestureDetectorCompat.onTouchEvent(e)
-                    mFloatView!!.onTouchEvent(e)
+                    mFloatView?.onTouchEvent(e)
                 }
                 val drawRect = Rect()
                 parent.getDrawingRect(drawRect)
@@ -200,9 +202,9 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
             y: Float
         ) {
             val rect = Rect()
-            v!!.getGlobalVisibleRect(rect)
+            v?.getGlobalVisibleRect(rect)
             if (rect.contains(x.toInt(), y.toInt())) {
-                v.performClick()
+                v?.performClick()
             }
             if (v is ViewGroup) {
                 val childCount = v.childCount
@@ -222,9 +224,9 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
             y: Float
         ) {
             val rect = Rect()
-            v!!.getGlobalVisibleRect(rect)
+            v?.getGlobalVisibleRect(rect)
             if (rect.contains(x.toInt(), y.toInt())) {
-                v.performLongClick()
+                v?.performLongClick()
             }
             if (v is ViewGroup) {
                 val childCount = v.childCount
@@ -239,7 +241,7 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
     /**
      * 判断条目类型是否需要悬浮
      */
-    private fun isFloatHolder(type: Int): Boolean {
+    private fun isFloatHolder(type: Int?): Boolean {
         for (viewType in mViewTypes) {
             if (type == viewType) {
                 return true
@@ -253,10 +255,10 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
      */
     private fun findPreFloatPosition(recyclerView: RecyclerView): Int {
         val adapter = recyclerView.adapter
-        val firstVisibleView = recyclerView.layoutManager!!.getChildAt(0)
-        val childAdapterPosition = recyclerView.getChildAdapterPosition(firstVisibleView!!)
+        val firstVisibleView = recyclerView.layoutManager?.getChildAt(0) ?: return -1
+        val childAdapterPosition = recyclerView.getChildAdapterPosition(firstVisibleView)
         for (i in childAdapterPosition downTo 0) {
-            if (isFloatHolder(adapter!!.getItemViewType(i))) {
+            if (isFloatHolder(adapter?.getItemViewType(i))) {
                 return i
             }
         }
@@ -270,23 +272,25 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
         if (mFloatPosition < 0) return null
         if (view != null && view.height > 0) {
             mHeightCache[mFloatPosition] = view.height
-            mTypeCache[parent.adapter!!.getItemViewType(mFloatPosition)] = view.height
+            mTypeCache[parent.adapter?.getItemViewType(mFloatPosition)] = view.height
         }
-        return getHolder(parent).itemView
+        return getHolder(parent)?.itemView
     }
 
     /**
      * 获取之前要悬浮的holder
      */
-    private fun getHolder(recyclerView: RecyclerView): RecyclerView.ViewHolder {
+    private fun getHolder(recyclerView: RecyclerView): RecyclerView.ViewHolder? {
         val adapter = recyclerView.adapter
-        val viewType = adapter!!.getItemViewType(mFloatPosition)
+        val viewType = adapter?.getItemViewType(mFloatPosition)
         var holder = mHolderCache[viewType]
         if (holder == null) {
-            holder = adapter.createViewHolder(recyclerView, adapter.getItemViewType(mFloatPosition))
+            holder =
+                adapter?.createViewHolder(recyclerView, adapter.getItemViewType(mFloatPosition))
             mHolderCache[viewType] = holder
         }
-        adapter.bindViewHolder(holder, mFloatPosition)
+        if (holder == null) return null
+        adapter?.bindViewHolder(holder, mFloatPosition)
         layoutView(holder.itemView, recyclerView)
         return holder
     }
@@ -309,7 +313,7 @@ class FloatDecoration(private vararg val mViewTypes: Int) : ItemDecoration() {
         val heightMode = View.MeasureSpec.EXACTLY
         var height = mHeightCache[mFloatPosition]
         if (height == null) {
-            height = mTypeCache[parent.adapter!!.getItemViewType(mFloatPosition)]
+            height = mTypeCache[parent.adapter?.getItemViewType(mFloatPosition)]
         }
         var heightSize = height ?: mClipBounds.height()
         mRecyclerViewPaddingLeft = parent.paddingLeft

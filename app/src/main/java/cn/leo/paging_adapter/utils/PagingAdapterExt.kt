@@ -47,7 +47,7 @@ fun SimplePagingAdapter.bind(smartRefreshLayout: SmartRefreshLayout) {
                 if (smartRefreshLayout.state != RefreshState.Refreshing) {
                     statePager.showLoading()
                 }
-                smartRefreshLayout.resetNoMoreData()
+                smartRefreshLayout.autoRefreshAnimationOnly()
             }
             is State.Success -> {
                 statePager.showContent()
