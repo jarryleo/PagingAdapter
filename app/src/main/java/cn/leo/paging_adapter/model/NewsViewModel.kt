@@ -39,7 +39,7 @@ class NewsViewModel : BaseViewModel() {
                 null,
                 data.date?.toLongOrNull(),
                 0,  //前面剩余多少未加载数量，
-                100  //后面剩余多少未加载数量，配合 enablePlaceholders 在滑动过快的时候显示占位；
+                10  //后面剩余多少未加载数量，配合 enablePlaceholders 在滑动过快的时候显示占位；
             )
         } catch (e: Exception) {
             //请求失败

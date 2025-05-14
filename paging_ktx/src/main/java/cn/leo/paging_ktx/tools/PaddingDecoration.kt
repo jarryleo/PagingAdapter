@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
  *  RecyclerView 间距调整，不是分割线，只是间距
  */
 @Suppress("UNUSED", "MemberVisibilityCanBePrivate")
-class PaddingDecoration : RecyclerView.ItemDecoration {
+open class PaddingDecoration : RecyclerView.ItemDecoration {
     //条目之间的间距，不包含边缘
     var leftSpace: Int = 0
     var rightSpace: Int = 0
@@ -24,6 +24,9 @@ class PaddingDecoration : RecyclerView.ItemDecoration {
     var rightSide: Int = 0
     var topSide: Int = 0
     var bottomSide: Int = 0
+
+    //跳过位置,跳过后间距不对这个条目生效
+    var skipPosition: (Int) -> Boolean = { false }
 
     constructor(space: Int = 0) {
         this.leftSpace = space
@@ -41,7 +44,8 @@ class PaddingDecoration : RecyclerView.ItemDecoration {
 
     constructor(
         leftSpace: Int = 0, rightSpace: Int = 0, topSpace: Int = 0, bottomSpace: Int = 0,
-        leftSide: Int = 0, rightSide: Int = 0, topSide: Int = 0, bottomSide: Int = 0
+        leftSide: Int = 0, rightSide: Int = 0, topSide: Int = 0, bottomSide: Int = 0,
+        skipPosition: (Int) -> Boolean = { false }
     ) {
         this.leftSpace = leftSpace
         this.rightSpace = rightSpace
@@ -51,6 +55,7 @@ class PaddingDecoration : RecyclerView.ItemDecoration {
         this.rightSide = rightSide
         this.topSide = topSide
         this.bottomSide = bottomSide
+        this.skipPosition = skipPosition
     }
 
 
@@ -60,6 +65,7 @@ class PaddingDecoration : RecyclerView.ItemDecoration {
         parent: RecyclerView,
         state: RecyclerView.State
     ) {
+        val isRtl = parent.layoutDirection == View.LAYOUT_DIRECTION_RTL
         when (val layoutManager = parent.layoutManager) {
             //表格布局
             is GridLayoutManager -> {
@@ -70,7 +76,7 @@ class PaddingDecoration : RecyclerView.ItemDecoration {
                 val spanSizeLookup = layoutManager.spanSizeLookup
                 if (spanSizeLookup is GridLayoutManager.DefaultSpanSizeLookup) {
                     //每行的条目数相等处理
-                    setRect(outRect, spanCount, itemCount, position, vertical)
+                    setRect(outRect, spanCount, itemCount, position, vertical, isRtl)
                 } else {
                     //每行数量不等处理 (跨列的条目，多少列算多少个) ，原理是假设当前条目之前的所有条目都是不跨列的
                     //总条目数
@@ -94,7 +100,8 @@ class PaddingDecoration : RecyclerView.ItemDecoration {
                         virtualSpanCount,
                         virtualItemSpanCount,
                         virtualPosition,
-                        vertical
+                        vertical,
+                        isRtl
                     )
                 }
             }
@@ -105,7 +112,7 @@ class PaddingDecoration : RecyclerView.ItemDecoration {
                 val spanCount = layoutManager.spanCount
                 val itemCount = layoutManager.itemCount
                 val position = lp.spanIndex
-                setRect(outRect, spanCount, itemCount, position, vertical)
+                setRect(outRect, spanCount, itemCount, position, vertical, isRtl)
             }
             //线性布局
             is LinearLayoutManager -> {
@@ -113,7 +120,7 @@ class PaddingDecoration : RecyclerView.ItemDecoration {
                 val spanCount = 1
                 val itemCount = layoutManager.itemCount
                 val position = parent.getChildAdapterPosition(view)
-                setRect(outRect, spanCount, itemCount, position, vertical)
+                setRect(outRect, spanCount, itemCount, position, vertical, isRtl)
             }
             //其它，不管边缘，只管间距
             else -> {
@@ -131,8 +138,12 @@ class PaddingDecoration : RecyclerView.ItemDecoration {
         spanCount: Int,
         totalCount: Int,
         position: Int,
-        isVertical: Boolean
+        isVertical: Boolean,
+        isRtl: Boolean,
     ) {
+        if (skipPosition.invoke(position)) {
+            return
+        }
         //总行数
         val totalRow = totalCount / spanCount + if (totalCount % spanCount == 0) {
             0
@@ -144,7 +155,7 @@ class PaddingDecoration : RecyclerView.ItemDecoration {
         //列
         val column = position % spanCount
 
-        outRect.left = if (isVertical) {
+        val left = if (isVertical) {
             if (column == 0) {
                 leftSide
             } else {
@@ -157,8 +168,13 @@ class PaddingDecoration : RecyclerView.ItemDecoration {
                 leftSpace
             }
         }
+        if (isRtl) {
+            outRect.right = left
+        } else {
+            outRect.left = left
+        }
 
-        outRect.right = if (isVertical) {
+        val right = if (isVertical) {
             if (column == spanCount - 1) {
                 rightSide
             } else {
@@ -170,6 +186,11 @@ class PaddingDecoration : RecyclerView.ItemDecoration {
             } else {
                 rightSpace
             }
+        }
+        if (isRtl) {
+            outRect.left = right
+        } else {
+            outRect.right = right
         }
 
         outRect.top = if (isVertical) {

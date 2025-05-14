@@ -27,11 +27,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
     }
     buildFeatures {
         dataBinding = true
@@ -79,9 +79,9 @@ dependencies {
     //下拉刷新-官方
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     //下拉刷新-第三方
-    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.3'
-    implementation 'com.scwang.smart:refresh-header-classics:2.0.3'
-    implementation 'com.scwang.smart:refresh-footer-classics:2.0.3'
+    implementation 'io.github.scwang90:refresh-layout-kernel:3.0.0-alpha'
+    implementation 'io.github.scwang90:refresh-header-classics:3.0.0-alpha'
+    implementation 'io.github.scwang90:refresh-footer-classics:3.0.0-alpha'
     //paging
     implementation project(path: ':paging_ktx')
 }
