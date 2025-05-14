@@ -25,7 +25,7 @@ open class PaddingDecoration : RecyclerView.ItemDecoration {
     var topSide: Int = 0
     var bottomSide: Int = 0
 
-    //跳过位置,跳过后间距不对这个条目生效
+    //跳过位置
     var skipPosition: (Int) -> Boolean = { false }
 
     constructor(space: Int = 0) {
@@ -72,7 +72,7 @@ open class PaddingDecoration : RecyclerView.ItemDecoration {
                 val vertical = layoutManager.orientation == GridLayoutManager.VERTICAL
                 val spanCount = layoutManager.spanCount
                 val itemCount = layoutManager.itemCount
-                val position = parent.getChildAdapterPosition(view)
+                val position = parent.getChildLayoutPosition(view)
                 val spanSizeLookup = layoutManager.spanSizeLookup
                 if (spanSizeLookup is GridLayoutManager.DefaultSpanSizeLookup) {
                     //每行的条目数相等处理
@@ -119,7 +119,7 @@ open class PaddingDecoration : RecyclerView.ItemDecoration {
                 val vertical = layoutManager.orientation == LinearLayoutManager.VERTICAL
                 val spanCount = 1
                 val itemCount = layoutManager.itemCount
-                val position = parent.getChildAdapterPosition(view)
+                val position = parent.getChildLayoutPosition(view)
                 setRect(outRect, spanCount, itemCount, position, vertical, isRtl)
             }
             //其它，不管边缘，只管间距
