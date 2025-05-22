@@ -4,7 +4,6 @@ import androidx.paging.PagingData
 import cn.leo.paging_ktx.adapter.DifferData
 import cn.leo.paging_ktx.adapter.ItemHelper
 import cn.leo.paging_ktx.adapter.PagingAdapter
-import cn.leo.paging_ktx.ext.getSuperClassGenericType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -32,23 +31,25 @@ open class SimplePagingAdapter(
 ) {
 
     private val holderMap =
-        mutableMapOf<Class<DifferData>, SimpleHolder<DifferData>?>()
+        mutableMapOf<String, SimpleHolder<DifferData>?>()
 
     init {
         cacheHolder(holders)
     }
 
     fun addHolder(holder: SimpleHolder<*>) {
-        val key = holder::class.java.getSuperClassGenericType<DifferData>()
+        val key = holder.getKey()
         val value = holder as? SimpleHolder<DifferData>
         holderMap[key] = value
     }
 
     private fun cacheHolder(holders: Array<out SimpleHolder<*>>) {
-        holders.forEach { addHolder(it) }
+        holders.forEach {
+            addHolder(it)
+        }
     }
 
-    protected fun setHolder(key: Class<DifferData>, holder: SimpleHolder<DifferData>) {
+    protected fun setHolder(key: String, holder: SimpleHolder<DifferData>) {
         holderMap[key] = holder
     }
 
@@ -70,9 +71,9 @@ open class SimplePagingAdapter(
 
     private fun getHolder(data: DifferData?): SimpleHolder<DifferData>? {
         val key = if (data == null) {
-            DifferData::class.java
+            DifferData::class.java.name
         } else {
-            data::class.java
+            data::class.java.name
         }
         return holderMap[key]
     }

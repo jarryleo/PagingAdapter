@@ -21,14 +21,14 @@ class SimpleArrayAdapter<T : DifferData>(
 ) : SimplePagingAdapter() {
 
     init {
-        val holder = ArrayHolder()
         if (data.isNotEmpty()) {
-            setHolder(data[0].javaClass, holder)
+            val holder = ArrayHolder()
+            setHolder(data[0].javaClass.name, holder)
             setList(scope, data)
         }
     }
 
-    inner class ArrayHolder : SimpleHolder<DifferData>(resource) {
+    inner class ArrayHolder : SimpleHolder<DifferData>(resource, data[0].javaClass) {
         override fun bindItem(
             item: ItemHelper,
             data: DifferData,

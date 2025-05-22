@@ -16,7 +16,7 @@ import cn.leo.paging_ktx.simple.SimpleHolder
  * @date : 2020/11/10
  * @description : 标题holder
  */
-class CheckedHolder : SimpleHolder<RepoEntity>(R.layout.item_checked) {
+class CheckedHolder : SimpleHolder<RepoEntity>(R.layout.item_checked, RepoEntity::class.java) {
     override fun bindItem(item: ItemHelper, data: RepoEntity, payloads: MutableList<Any>?) {
         item.binding<ItemCheckedBinding>()?.let {
             if (payloads.isNullOrEmpty()) it.data = data

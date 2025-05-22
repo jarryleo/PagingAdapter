@@ -12,7 +12,7 @@ import cn.leo.paging_ktx.simple.SimpleHolder
  * @date : 2020/11/10
  * @description : 标题holder
  */
-class TitleHolder : SimpleHolder<TitleBean>(R.layout.item_title) {
+class TitleHolder : SimpleHolder<TitleBean>(R.layout.item_title, TitleBean::class.java) {
     override fun bindItem(item: ItemHelper, data: TitleBean, payloads: MutableList<Any>?) {
         item.binding<ItemTitleBinding>()?.let {
             it.data = data

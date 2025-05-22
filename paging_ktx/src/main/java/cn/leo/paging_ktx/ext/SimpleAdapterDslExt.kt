@@ -110,7 +110,7 @@ fun interface OnItemChecked {
 open class DslClickBuilderImpl<T : DifferData>(
     private val holder: SimpleHolder<T>
 ) : DslClickBuilder<T> {
-    protected val clazz = holder.getDataClassType()
+    protected val key = holder.getKey()
 
     private var onItemClickListener: OnItemClick<T>? = null
     private var onItemLongClickListener: OnItemClick<T>? = null
@@ -124,7 +124,7 @@ open class DslClickBuilderImpl<T : DifferData>(
         recyclerView: RecyclerView
     ) {
         val item = adapter.getData(position)
-        if (item != null && item::class.java == clazz) {
+        if (item != null && item.javaClass.name == key) {
             val itemInfo = ItemInfo(item as T, position, v, adapter, recyclerView)
             onItemClickListener?.onClick(itemInfo)
         }
@@ -137,7 +137,7 @@ open class DslClickBuilderImpl<T : DifferData>(
         recyclerView: RecyclerView
     ) {
         val item = adapter.getData(position)
-        if (item != null && item::class.java == clazz) {
+        if (item != null && item.javaClass.name == key) {
             val itemInfo = ItemInfo(item as T, position, v, adapter, recyclerView)
             onItemLongClickListener?.onClick(itemInfo)
         }
@@ -150,7 +150,7 @@ open class DslClickBuilderImpl<T : DifferData>(
         recyclerView: RecyclerView
     ) {
         val item = adapter.getData(position)
-        if (item != null && item::class.java == clazz) {
+        if (item != null && item.javaClass.name == key) {
             val itemInfo = ItemInfo(item as T, position, v, adapter, recyclerView)
             onItemChildClickListener[v.id]?.onClick(itemInfo)
         }
@@ -163,7 +163,7 @@ open class DslClickBuilderImpl<T : DifferData>(
         recyclerView: RecyclerView
     ) {
         val item = adapter.getData(position)
-        if (item != null && item::class.java == clazz) {
+        if (item != null && item.javaClass.name == key) {
             val itemInfo = ItemInfo(item as T, position, v, adapter, recyclerView)
             onItemChildLongClickListener[v.id]?.onClick(itemInfo)
         }
@@ -206,7 +206,7 @@ class DslCheckedBuilderImpl<T : DifferData>(
         super.doItemClick(position, v, adapter, recyclerView)
         if (!isClickChecked) return
         val item = adapter.getData(position)
-        if (item != null && item::class.java == clazz) {
+        if (item != null && item.javaClass.name == key) {
             if (adapter is SimpleCheckedAdapter) {
                 adapter.setChecked(position, !adapter.itemIsChecked(position))
             }

@@ -12,7 +12,8 @@ import cn.leo.paging_ktx.simple.SimpleHolder
  * @date : 2020/11/10
  * @description : 知乎日报 holder
  */
-class NewsHolder : SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news) {
+class NewsHolder :
+    SimpleHolder<NewsBean.StoriesBean>(R.layout.item_news, NewsBean.StoriesBean::class.java) {
     override fun bindItem(
         item: ItemHelper,
         data: NewsBean.StoriesBean,
